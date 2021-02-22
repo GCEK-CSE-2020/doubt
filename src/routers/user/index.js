@@ -32,22 +32,6 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-router.post(
-  "/user/avatar",
-  auth,
-  upload.single("avatar"),
-  async (req, res) => {
-    req.user.avatar = req.file.buffer;
-
-    await req.user.save();
-
-    res.send({ status: "done" });
-  },
-  (error, req, res, next) => {
-    res.status(400).send({ status: "false" });
-  }
-);
-
 router.post("/login", async (req, res) => {
   try {
     const user = await User.findUser(req.body.user, req.body.password);
