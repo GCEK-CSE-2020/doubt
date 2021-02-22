@@ -10,7 +10,6 @@
   "dependencies": {
     "dotenv": "latest",
     "express": "latest",
-    "jsonwebtoken": "latest",
     "mongodb": "latest"
   },
   "devDependencies": {
