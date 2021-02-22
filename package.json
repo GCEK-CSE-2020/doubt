@@ -1,0 +1,21 @@
+{
+  "name": "sticky-notes-rest-api",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon .",
+    "dev": "nodemon ."
+  },
+  "dependencies": {
+    "bcryptjs": "latest",
+    "cors": "latest",
+    "express": "latest",
+    "jsonwebtoken": "latest",
+    "mongoose": "latest",
+    "multer": "latest",
+    "nodemon": "latest",
+    "sharp": "latest",
+    "validator": "latest"
+  }
+}
