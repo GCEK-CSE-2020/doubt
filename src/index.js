@@ -3,9 +3,9 @@ const { MongoClient } = require("mongodb");
 require("dotenv").config();
 
 const client = new MongoClient(
-  "mongodb+srv://ramnath:" +
+  "mongodb+srv://team:" +
     process.env.PASS +
-    "@cluster0.07lh9.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "@cluster0.sxquf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
   { useUnifiedTopology: true }
 );
 let questions;
