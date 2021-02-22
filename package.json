@@ -8,14 +8,10 @@
     "dev": "nodemon ."
   },
   "dependencies": {
-    "bcryptjs": "latest",
-    "cors": "latest",
+    "dotenv": "latest",
     "express": "latest",
     "jsonwebtoken": "latest",
-    "mongoose": "latest",
-    "multer": "latest",
-    "sharp": "latest",
-    "validator": "latest"
+    "mongodb": "latest"
   },
   "devDependencies": {
     "nodemon": "latest"

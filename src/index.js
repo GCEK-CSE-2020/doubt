@@ -1,22 +1,88 @@
 const express = require("express");
-require("./db");
-const userRouter = require("./routers/user");
-const noteRouter = require("./routers/note");
-const cors = require("cors");
+const { MongoClient } = require("mongodb");
+require("dotenv").config();
+
+const client = new MongoClient(
+  "mongodb+srv://ramnath:" +
+    process.env.PASS +
+    "@cluster0.07lh9.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+  { useUnifiedTopology: true }
+);
+let questions;
+
+async function run() {
+  try {
+    await client.connect();
+    questions = client.db("cluster0").collection("questions");
+  } catch (err) {
+    console.log(err);
+  }
+}
+run();
 
 const app = express();
-const port = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use(cors());
-app.options("*", cors());
-app.use(userRouter);
-app.use(noteRouter);
 
 app.get("/", (req, res) => {
-  res.send("welcome to playork sticky notes");
+  res.send("welcome");
 });
 
-app.listen(port, () => {
-  console.log("running in port: " + port);
+app.get("/get_solved", async (req, res) => {
+  questions.find({ status: "solved" }).toArray((err, items) => {
+    if (err) {
+      res.send({ status: "false" });
+    }
+
+    res.send(items);
+  });
+});
+
+app.get("/get_unsolved", async (req, res) => {
+  questions.find({ status: "unsolved" }).toArray((err, items) => {
+    if (err) {
+      res.send({ status: "false" });
+    }
+
+    res.send(items);
+  });
+});
+
+app.post("/set", async (req, res) => {
+  if (req.body.pass == "donotshare") {
+    questions.insertOne(
+      { question: req.body.question, answer: "", status: "unsolved" },
+      (err, result) => {
+        if (err) {
+          res.send({ status: "false" });
+        } else {
+          res.send({ status: "true" });
+        }
+      }
+    );
+  } else {
+    res.status(404).send({ status: "false" });
+  }
+});
+
+app.post("/update", async (req, res) => {
+  if (req.body.pass == "donotshare") {
+    questions.updateOne(
+      { question: req.body.question },
+      { $set: { answer: req.body.answer, status: "solved" } },
+      (err, item) => {
+        if (err) {
+          res.send({ status: "false" });
+        } else {
+          res.send({ status: "true" });
+        }
+      }
+    );
+  } else {
+    res.status(404).send({ status: "false" });
+  }
+});
+
+app.listen(process.env.PORT || 3000, () => {
+  console.log("running");
 });
