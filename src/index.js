@@ -123,7 +123,7 @@ app.post("/update", async (req, res) => {
           questions.findOne({ question: req.body.question }, (err, item) => {
             transporter.sendMail(
               {
-                from: "gcekcse2020@gmail.com>",
+                from: "gcekcse2020@gmail.com",
                 to: item.email,
                 subject: "Your Doubt Is Solved",
                 text:
@@ -155,7 +155,7 @@ app.post("/wrong", async (req, res) => {
   if (req.body.pass == "donotshare") {
     transporter.sendMail(
       {
-        from: "gcekcse2020@gmail.com>",
+        from: "gcekcse2020@gmail.com",
         to: "gcekcse2020@gmail.com",
         subject: "Answer Is Wrong",
         text: req.body.question + "\n" + req.body.email,
