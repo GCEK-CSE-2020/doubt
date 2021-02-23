@@ -130,8 +130,8 @@ app.post("/update", async (req, res) => {
             },
             (err, data) => {
               if (err) {
-                res.send({ status: "false" });
                 console.log(err);
+                res.send({ status: "false" });
               } else {
                 res.send({ status: "true" });
               }
