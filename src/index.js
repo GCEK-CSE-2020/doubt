@@ -18,9 +18,7 @@ async function run() {
     questions = await client.db("cluster0").collection("questions");
 
     transporter = await nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
+      service: "gmail",
       auth: {
         user: "gcekcse2020",
         pass: process.env.PASS,
@@ -122,13 +120,23 @@ app.post("/update", async (req, res) => {
         if (err) {
           res.send({ status: "false" });
         } else {
-          transporter.sendMail({
-            from: "gcekcse2020@gmail.com>",
-            to: item.email,
-            subject: "Your Doubt Is Solved",
-            text:
-              "Questions: " + item.question + "\n" + "Answer: " + item.answer,
-          });
+          transporter.sendMail(
+            {
+              from: "gcekcse2020@gmail.com>",
+              to: item.email,
+              subject: "Your Doubt Is Solved",
+              text:
+                "Questions: " + item.question + "\n" + "Answer: " + item.answer,
+            },
+            (err, data) => {
+              if (err) {
+                res.send({ status: "false" });
+                console.log(err);
+              } else {
+                res.send({ status: "true" });
+              }
+            }
+          );
           res.send({ status: "true" });
         }
       }
@@ -140,12 +148,22 @@ app.post("/update", async (req, res) => {
 
 app.post("/wrong", async (req, res) => {
   if (req.body.pass == "donotshare") {
-    transporter.sendMail({
-      from: "gcekcse2020@gmail.com>",
-      to: "gcekcse2020@gmail.com",
-      subject: "Your Doubt Is Solved",
-      text: req.body.question + "\n" + req.body.email,
-    });
+    transporter.sendMail(
+      {
+        from: "gcekcse2020@gmail.com>",
+        to: "gcekcse2020@gmail.com",
+        subject: "Answer Is Wrong",
+        text: req.body.question + "\n" + req.body.email,
+      },
+      (err, data) => {
+        if (err) {
+          res.send({ status: "false" });
+          console.log(err);
+        } else {
+          res.send({ status: "true" });
+        }
+      }
+    );
   } else {
     res.status(404).send({ status: "false" });
   }
