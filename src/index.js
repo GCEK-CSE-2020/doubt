@@ -120,6 +120,7 @@ app.post("/update", async (req, res) => {
         if (err) {
           res.send({ status: "false" });
         } else {
+          console.log(item);
           transporter.sendMail(
             {
               from: "gcekcse2020@gmail.com>",
