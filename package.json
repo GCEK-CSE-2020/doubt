@@ -11,9 +11,7 @@
     "dotenv": "latest",
     "express": "latest",
     "mongodb": "latest",
-    "nodemailer": "^6.4.18"
-  },
-  "devDependencies": {
+    "nodemailer": "latest",
     "nodemon": "latest"
   }
 }
