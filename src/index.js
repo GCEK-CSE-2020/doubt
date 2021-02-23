@@ -89,6 +89,8 @@ app.post("/set", async (req, res) => {
         question: req.body.question,
         answer: "",
         status: "unsolved",
+        topic: req.body.topic,
+        module: req.body.module,
         email: req.body.email,
         aemail: "",
       },
