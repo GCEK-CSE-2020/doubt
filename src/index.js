@@ -120,24 +120,29 @@ app.post("/update", async (req, res) => {
         if (err) {
           res.send({ status: "false" });
         } else {
-          console.log(item);
-          transporter.sendMail(
-            {
-              from: "gcekcse2020@gmail.com>",
-              to: item.email,
-              subject: "Your Doubt Is Solved",
-              text:
-                "Questions: " + item.question + "\n" + "Answer: " + item.answer,
-            },
-            (err, data) => {
-              if (err) {
-                console.log(err);
-                res.send({ status: "false" });
-              } else {
-                res.send({ status: "true" });
+          questions.findOne({ question: req.body.question }, (err, item) => {
+            transporter.sendMail(
+              {
+                from: "gcekcse2020@gmail.com>",
+                to: item.email,
+                subject: "Your Doubt Is Solved",
+                text:
+                  "Questions: " +
+                  item.question +
+                  "\n" +
+                  "Answer: " +
+                  item.answer,
+              },
+              (err, data) => {
+                if (err) {
+                  console.log(err);
+                  res.send({ status: "false" });
+                } else {
+                  res.send({ status: "true" });
+                }
               }
-            }
-          );
+            );
+          });
         }
       }
     );
