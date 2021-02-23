@@ -20,7 +20,7 @@ async function run() {
     transporter = await nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 465,
-      secure: yes,
+      secure: true,
       auth: {
         user: "gcekcse2020",
         pass: process.env.PASS,
