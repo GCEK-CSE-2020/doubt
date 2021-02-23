@@ -134,12 +134,7 @@ app.post("/update", async (req, res) => {
                   item.answer,
               },
               (err, data) => {
-                if (err) {
-                  console.log(err);
-                  res.send({ status: "false" });
-                } else {
-                  res.send({ status: "true" });
-                }
+                res.send({ status: "true" });
               }
             );
           });
@@ -161,12 +156,7 @@ app.post("/wrong", async (req, res) => {
         text: req.body.question + "\n" + req.body.email,
       },
       (err, data) => {
-        if (err) {
-          res.send({ status: "false" });
-          console.log(err);
-        } else {
-          res.send({ status: "true" });
-        }
+        res.send({ status: "true" });
       }
     );
   } else {
