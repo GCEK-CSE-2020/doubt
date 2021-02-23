@@ -137,7 +137,6 @@ app.post("/update", async (req, res) => {
               }
             }
           );
-          res.send({ status: "true" });
         }
       }
     );
