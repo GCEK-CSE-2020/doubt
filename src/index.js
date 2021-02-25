@@ -11,6 +11,8 @@ const client = new MongoClient(
 );
 let questions;
 let transporter;
+let getIn = ["gcekcse2020@gmail.com"];
+let pass = "donotshare";
 
 async function run() {
   try {
@@ -38,8 +40,20 @@ app.get("/", (req, res) => {
   res.send("welcome");
 });
 
+app.post("/check", async (req, res) => {
+  if (req.body.pass == pass) {
+    if (getIn.includes(req.body.email)) {
+      res.send({ status: "true" });
+    } else {
+      res.status(404).send({ status: "false" });
+    }
+  } else {
+    res.status(404).send({ status: "false" });
+  }
+});
+
 app.post("/get_solved", async (req, res) => {
-  if (req.body.pass == "donotshare") {
+  if (req.body.pass == pass) {
     questions
       .find({
         status: "solved",
@@ -59,7 +73,7 @@ app.post("/get_solved", async (req, res) => {
 });
 
 app.post("/get_unsolved", async (req, res) => {
-  if (req.body.pass == "donotshare") {
+  if (req.body.pass == pass) {
     questions
       .find({
         status: "unsolved",
@@ -81,7 +95,7 @@ app.post("/get_unsolved", async (req, res) => {
 });
 
 app.post("/set", async (req, res) => {
-  if (req.body.pass == "donotshare") {
+  if (req.body.pass == pass) {
     questions.insertOne(
       {
         question: req.body.question,
@@ -106,7 +120,7 @@ app.post("/set", async (req, res) => {
 });
 
 app.post("/update", async (req, res) => {
-  if (req.body.pass == "donotshare") {
+  if (req.body.pass == pass) {
     questions.updateOne(
       { question: req.body.question },
       {
@@ -147,7 +161,7 @@ app.post("/update", async (req, res) => {
 });
 
 app.post("/wrong", async (req, res) => {
-  if (req.body.pass == "donotshare") {
+  if (req.body.pass == pass) {
     transporter.sendMail(
       {
         from: "gcekcse2020@gmail.com",
@@ -165,7 +179,7 @@ app.post("/wrong", async (req, res) => {
 });
 
 app.post("/delete_answer", async (req, res) => {
-  if (req.body.pass == "donotshare") {
+  if (req.body.pass == pass) {
     questions.updateOne(
       { question: req.body.question },
       {
