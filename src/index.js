@@ -98,24 +98,40 @@ app.post("/get_unsolved", async (req, res) => {
 
 app.post("/set", async (req, res) => {
   if (req.body.pass == pass) {
-    questions.insertOne(
-      {
+    questions
+      .find({
         question: req.body.question,
-        answer: "",
-        status: "unsolved",
-        topic: req.body.topic,
-        module: req.body.module,
-        email: req.body.email,
-        aemail: "",
-      },
-      (err, result) => {
+      })
+      .toArray((err, items) => {
         if (err) {
           res.send({ status: "false" });
         } else {
-          res.send({ status: "true" });
+          if (items) {
+            res.send({ status: "check" });
+          } else {
+            questions.insertOne(
+              {
+                question: req.body.question,
+                time: req.body.time,
+                answer: "",
+                atime: "",
+                status: "unsolved",
+                topic: req.body.topic,
+                module: req.body.module,
+                email: req.body.email,
+                aemail: "",
+              },
+              (err, result) => {
+                if (err) {
+                  res.send({ status: "false" });
+                } else {
+                  res.send({ status: "true" });
+                }
+              }
+            );
+          }
         }
-      }
-    );
+      });
   } else {
     res.status(404).send({ status: "false" });
   }
@@ -128,6 +144,7 @@ app.post("/update", async (req, res) => {
       {
         $set: {
           answer: req.body.answer,
+          atime: req.body.atime,
           status: "solved",
           aemail: req.body.aemail,
         },
