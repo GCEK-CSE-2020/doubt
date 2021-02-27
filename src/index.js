@@ -11,7 +11,7 @@ const client = new MongoClient(
 );
 let questions;
 let transporter;
-let pass = "donotshare";
+let pass = process.env.AUTH;
 
 async function run() {
   try {
@@ -40,7 +40,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/check", async (req, res) => {
-  if (req.body.pass == "don'tshare") {
+  if (req.body.pass == process.env.USER) {
     if (
       req.body.email.toLowerCase().split("@")[1] == "gcek.ac.in" ||
       req.body.email.toLowerCase() == "gcekcse2020@gmail.com"
