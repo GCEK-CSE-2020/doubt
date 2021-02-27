@@ -64,7 +64,7 @@ app.post("/get_solved", async (req, res) => {
         module: req.body.module,
       })
       .toArray((err, items) => {
-        client.close();
+        await client.close();
 
         if (err) {
           res.send({ status: "false" });
@@ -88,7 +88,7 @@ app.post("/get_unsolved", async (req, res) => {
         module: req.body.module,
       })
       .toArray((err, items) => {
-        client.close();
+        await client.close();
 
         if (err) {
           res.send({
@@ -113,12 +113,12 @@ app.post("/set", async (req, res) => {
       })
       .toArray((err, items) => {
         if (err) {
-          client.close();
+          await client.close();
 
           res.send({ status: "false" });
         } else {
           if (items) {
-            client.close();
+            await client.close();
 
             res.send({ status: "check" });
           } else {
@@ -135,7 +135,7 @@ app.post("/set", async (req, res) => {
                 aemail: "",
               },
               (err, result) => {
-                client.close();
+                await client.close();
 
                 if (err) {
                   res.send({ status: "false" });
@@ -168,12 +168,12 @@ app.post("/update", async (req, res) => {
       },
       (err, item) => {
         if (err) {
-          client.close();
+          await client.close();
 
           res.send({ status: "false" });
         } else {
           questions.findOne({ question: req.body.question }, (err, item) => {
-            client.close();
+            await client.close();
 
             transporter.sendMail(
               {
@@ -232,7 +232,7 @@ app.post("/delete_answer", async (req, res) => {
         },
       },
       (err, item) => {
-        client.close();
+        await client.close();
 
         if (err) {
           res.send({ status: "false" });
