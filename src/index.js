@@ -4,9 +4,9 @@ const nodemailer = require("nodemailer");
 require("dotenv").config();
 
 const client = new MongoClient(
-  "mongodb+srv://team:" +
+  "mongodb+srv://gcekcse2020:" +
     process.env.PASS +
-    "@cluster0.sxquf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "@forum.8jnnl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
   { useUnifiedTopology: true }
 );
 let questions;
