@@ -30,6 +30,8 @@ async function run() {
   }
 }
 
+run();
+
 const app = express();
 
 app.use(express.json());
@@ -55,8 +57,6 @@ app.post("/check", async (req, res) => {
 
 app.post("/get_solved", async (req, res) => {
   if (req.body.pass == pass) {
-    await run();
-
     questions
       .find({
         status: "solved",
@@ -64,8 +64,6 @@ app.post("/get_solved", async (req, res) => {
         module: req.body.module,
       })
       .toArray((err, items) => {
-        await client.close();
-
         if (err) {
           res.send({ status: "false" });
         } else {
@@ -79,8 +77,6 @@ app.post("/get_solved", async (req, res) => {
 
 app.post("/get_unsolved", async (req, res) => {
   if (req.body.pass == pass) {
-    await run();
-
     questions
       .find({
         status: "unsolved",
@@ -88,8 +84,6 @@ app.post("/get_unsolved", async (req, res) => {
         module: req.body.module,
       })
       .toArray((err, items) => {
-        await client.close();
-
         if (err) {
           res.send({
             status: "false",
@@ -105,21 +99,15 @@ app.post("/get_unsolved", async (req, res) => {
 
 app.post("/set", async (req, res) => {
   if (req.body.pass == pass) {
-    await run();
-
     questions
       .find({
         question: req.body.question,
       })
       .toArray((err, items) => {
         if (err) {
-          await client.close();
-
           res.send({ status: "false" });
         } else {
           if (items) {
-            await client.close();
-
             res.send({ status: "check" });
           } else {
             questions.insertOne(
@@ -135,8 +123,6 @@ app.post("/set", async (req, res) => {
                 aemail: "",
               },
               (err, result) => {
-                await client.close();
-
                 if (err) {
                   res.send({ status: "false" });
                 }
@@ -154,8 +140,6 @@ app.post("/set", async (req, res) => {
 
 app.post("/update", async (req, res) => {
   if (req.body.pass == pass) {
-    await run();
-
     questions.updateOne(
       { question: req.body.question },
       {
@@ -168,13 +152,9 @@ app.post("/update", async (req, res) => {
       },
       (err, item) => {
         if (err) {
-          await client.close();
-
           res.send({ status: "false" });
         } else {
           questions.findOne({ question: req.body.question }, (err, item) => {
-            await client.close();
-
             transporter.sendMail(
               {
                 from: "gcekcse2020@gmail.com",
@@ -220,8 +200,6 @@ app.post("/wrong", async (req, res) => {
 
 app.post("/delete_answer", async (req, res) => {
   if (req.body.pass == pass) {
-    await run();
-
     questions.updateOne(
       { question: req.body.question },
       {
@@ -232,8 +210,6 @@ app.post("/delete_answer", async (req, res) => {
         },
       },
       (err, item) => {
-        await client.close();
-
         if (err) {
           res.send({ status: "false" });
         }
