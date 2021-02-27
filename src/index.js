@@ -65,9 +65,9 @@ app.post("/get_solved", async (req, res) => {
       .toArray((err, items) => {
         if (err) {
           res.send({ status: "false" });
+        } else {
+          res.send(items);
         }
-
-        res.send(items);
       });
   } else {
     res.status(404).send({ status: "false" });
