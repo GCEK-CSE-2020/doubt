@@ -29,7 +29,6 @@ async function run() {
     console.log(err);
   }
 }
-run();
 
 const app = express();
 
@@ -56,6 +55,8 @@ app.post("/check", async (req, res) => {
 
 app.post("/get_solved", async (req, res) => {
   if (req.body.pass == pass) {
+    await run();
+
     questions
       .find({
         status: "solved",
@@ -63,6 +64,8 @@ app.post("/get_solved", async (req, res) => {
         module: req.body.module,
       })
       .toArray((err, items) => {
+        client.close();
+
         if (err) {
           res.send({ status: "false" });
         }
@@ -76,6 +79,8 @@ app.post("/get_solved", async (req, res) => {
 
 app.post("/get_unsolved", async (req, res) => {
   if (req.body.pass == pass) {
+    await run();
+
     questions
       .find({
         status: "unsolved",
@@ -83,6 +88,8 @@ app.post("/get_unsolved", async (req, res) => {
         module: req.body.module,
       })
       .toArray((err, items) => {
+        client.close();
+
         if (err) {
           res.send({
             status: "false",
@@ -98,15 +105,21 @@ app.post("/get_unsolved", async (req, res) => {
 
 app.post("/set", async (req, res) => {
   if (req.body.pass == pass) {
+    await run();
+
     questions
       .find({
         question: req.body.question,
       })
       .toArray((err, items) => {
         if (err) {
+          client.close();
+
           res.send({ status: "false" });
         } else {
           if (items) {
+            client.close();
+
             res.send({ status: "check" });
           } else {
             questions.insertOne(
@@ -122,11 +135,13 @@ app.post("/set", async (req, res) => {
                 aemail: "",
               },
               (err, result) => {
+                client.close();
+
                 if (err) {
                   res.send({ status: "false" });
-                } else {
-                  res.send({ status: "true" });
                 }
+
+                res.send({ status: "true" });
               }
             );
           }
@@ -139,6 +154,8 @@ app.post("/set", async (req, res) => {
 
 app.post("/update", async (req, res) => {
   if (req.body.pass == pass) {
+    await run();
+
     questions.updateOne(
       { question: req.body.question },
       {
@@ -151,9 +168,13 @@ app.post("/update", async (req, res) => {
       },
       (err, item) => {
         if (err) {
+          client.close();
+
           res.send({ status: "false" });
         } else {
           questions.findOne({ question: req.body.question }, (err, item) => {
+            client.close();
+
             transporter.sendMail(
               {
                 from: "gcekcse2020@gmail.com",
@@ -199,6 +220,8 @@ app.post("/wrong", async (req, res) => {
 
 app.post("/delete_answer", async (req, res) => {
   if (req.body.pass == pass) {
+    await run();
+
     questions.updateOne(
       { question: req.body.question },
       {
@@ -209,11 +232,13 @@ app.post("/delete_answer", async (req, res) => {
         },
       },
       (err, item) => {
+        client.close();
+
         if (err) {
           res.send({ status: "false" });
-        } else {
-          res.send({ status: "true" });
         }
+
+        res.send({ status: "true" });
       }
     );
   } else {
