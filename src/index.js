@@ -205,6 +205,7 @@ app.post("/delete_answer", async (req, res) => {
       {
         $set: {
           answer: "",
+          atime: "",
           status: "unsolved",
           aemail: "",
         },
