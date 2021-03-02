@@ -1,4 +1,5 @@
 const express = require("express");
+var cors = require("cors");
 const { MongoClient } = require("mongodb");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
@@ -35,6 +36,8 @@ run();
 const app = express();
 
 app.use(express.json());
+app.use(cors());
+app.options("*", cors());
 
 app.get("/", (req, res) => {
   res.send("welcome");
