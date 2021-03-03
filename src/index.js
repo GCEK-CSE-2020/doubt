@@ -17,7 +17,13 @@ let pass = process.env.AUTH;
 async function run() {
   try {
     await client.connect();
-    questions = await client.db("cluster0").collection("questions");
+
+    let db = await client.db("cluster0");
+    questions = await db.collection("questions");
+
+    await db.ensureIndex("quest", {
+      question: "quest",
+    });
 
     transporter = await nodemailer.createTransport({
       service: "gmail",
@@ -60,19 +66,54 @@ app.post("/check", async (req, res) => {
 
 app.post("/get", async (req, res) => {
   if (req.body.pass == pass) {
-    questions
-      .find({
-        status: req.body.status,
-        topic: req.body.topic,
-        module: req.body.module,
-      })
-      .toArray((err, items) => {
+    let data = {};
+
+    if (req.body.status) {
+      data.status = req.body.status;
+    }
+
+    if (req.body.topic) {
+      data.status = req.body.topic;
+    }
+
+    if (req.body.module) {
+      data.status = req.body.module;
+    }
+
+    if (req.body.quest) {
+      data["$quest"] = { $search: req.body.quest };
+      questions
+        .find(
+          data,
+          {
+            textScore: {
+              $meta: "textScore",
+            },
+          },
+          {
+            sort: {
+              textScore: {
+                $meta: "textScore",
+              },
+            },
+          }
+        )
+        .toArray((err, items) => {
+          if (err) {
+            res.send({ status: "false" });
+          } else {
+            res.send(items);
+          }
+        });
+    } else {
+      questions.find(data).toArray((err, items) => {
         if (err) {
           res.send({ status: "false" });
         } else {
           res.send(items);
         }
       });
+    }
   } else {
     res.status(404).send({ status: "false" });
   }
