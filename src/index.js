@@ -58,11 +58,11 @@ app.post("/check", async (req, res) => {
   }
 });
 
-app.post("/get_solved", async (req, res) => {
+app.post("/get", async (req, res) => {
   if (req.body.pass == pass) {
     questions
       .find({
-        status: "solved",
+        status: req.body.status,
         topic: req.body.topic,
         module: req.body.module,
       })
@@ -72,28 +72,6 @@ app.post("/get_solved", async (req, res) => {
         } else {
           res.send(items);
         }
-      });
-  } else {
-    res.status(404).send({ status: "false" });
-  }
-});
-
-app.post("/get_unsolved", async (req, res) => {
-  if (req.body.pass == pass) {
-    questions
-      .find({
-        status: "unsolved",
-        topic: req.body.topic,
-        module: req.body.module,
-      })
-      .toArray((err, items) => {
-        if (err) {
-          res.send({
-            status: "false",
-          });
-        }
-
-        res.send(items);
       });
   } else {
     res.status(404).send({ status: "false" });
@@ -116,6 +94,7 @@ app.post("/set", async (req, res) => {
             questions.insertOne(
               {
                 question: req.body.question,
+                description: req.body.description,
                 time: req.body.time,
                 answer: "",
                 atime: "",
