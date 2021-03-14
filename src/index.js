@@ -78,7 +78,7 @@ app.post("/get", async (req, res) => {
 
     if (req.body.quest) {
       data["$text"] = {};
-      data["$search"] = req.body.quest;
+      data["$search"] = { question: req.body.quest };
       questions
         .find(
           data,
