@@ -82,7 +82,7 @@ app.post("/get", async (req, res) => {
       data["$text"]["$search"] = req.body.quest;
       questions.find(data).toArray((err, items) => {
         if (err) {
-          res.send({ status: err });
+          res.send({ status: false });
         } else {
           res.send(items);
         }
