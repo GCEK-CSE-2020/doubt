@@ -77,8 +77,7 @@ app.post("/get", async (req, res) => {
     }
 
     if (req.body.quest) {
-      data["$text"] = {};
-      data["$search"] = { query: req.body.quest, path: "question" };
+      data["$search"] = { text: { query: req.body.quest, path: "question" } };
       questions
         .find(
           data,
