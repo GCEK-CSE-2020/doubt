@@ -79,7 +79,7 @@ app.post("/get", async (req, res) => {
 
     if (req.body.quest) {
       data["$text"] = {};
-      data["$search"] = req.body.quest;
+      data["$text"]["$search"] = req.body.quest;
       questions
         .find(data, {
           textScore: {
@@ -93,7 +93,7 @@ app.post("/get", async (req, res) => {
         })
         .toArray((err, items) => {
           if (err) {
-            res.send({ status: "false" });
+            res.send({ status: err });
           } else {
             res.send(items);
           }
