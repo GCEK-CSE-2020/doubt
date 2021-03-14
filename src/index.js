@@ -20,7 +20,6 @@ async function run() {
 
     let db = await client.db("cluster0");
     questions = await db.collection("questions");
-    await questions.createIndex({ question: "text", description: "text" });
 
     transporter = await nodemailer.createTransport({
       service: "gmail",
