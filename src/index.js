@@ -97,7 +97,7 @@ app.post("/get", async (req, res) => {
         )
         .toArray((err, items) => {
           if (err) {
-            res.send({ status: "false" });
+            res.send({ status: err });
           } else {
             res.send(items);
           }
