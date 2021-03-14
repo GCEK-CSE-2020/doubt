@@ -81,21 +81,16 @@ app.post("/get", async (req, res) => {
       data["$text"] = {};
       data["$search"] = req.body.quest;
       questions
-        .find(
-          data,
-          {
+        .find(data, {
+          textScore: {
+            $meta: "textScore",
+          },
+          sort: {
             textScore: {
               $meta: "textScore",
             },
           },
-          {
-            sort: {
-              textScore: {
-                $meta: "textScore",
-              },
-            },
-          }
-        )
+        })
         .toArray((err, items) => {
           if (err) {
             res.send({ status: "false" });
