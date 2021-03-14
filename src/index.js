@@ -21,10 +21,6 @@ async function run() {
     let db = await client.db("cluster0");
     questions = await db.collection("questions");
 
-    await db.ensureIndex("questions", {
-      question: "quest",
-    });
-
     transporter = await nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -81,7 +77,7 @@ app.post("/get", async (req, res) => {
     }
 
     if (req.body.quest) {
-      data["$quest"] = {};
+      data["$text"] = {};
       data["$search"] = req.body.quest;
       questions
         .find(
