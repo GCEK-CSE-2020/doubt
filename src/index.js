@@ -21,7 +21,7 @@ async function run() {
     let db = await client.db("cluster0");
     questions = await db.collection("questions");
 
-    await db.ensureIndex("quest", {
+    await db.ensureIndex("questions", {
       question: "quest",
     });
 
@@ -81,7 +81,8 @@ app.post("/get", async (req, res) => {
     }
 
     if (req.body.quest) {
-      data["$quest"] = { $search: req.body.quest };
+      data["$quest"] = {};
+      data["$search"] = req.body.quest;
       questions
         .find(
           data,
