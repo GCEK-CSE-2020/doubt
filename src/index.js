@@ -120,9 +120,11 @@ app.post("/set", async (req, res) => {
               {
                 question: req.body.question,
                 description: req.body.description,
+                email: req.body.email,
                 time: req.body.time,
                 answer: "",
                 atime: "",
+                aemail: "",
                 status: "unsolved",
                 topic: req.body.topic,
                 module: req.body.module,
@@ -135,7 +137,6 @@ app.post("/set", async (req, res) => {
                     {
                       question: req.body.question,
                       email: [req.body.email],
-                      aemail: "",
                     },
                     (err, result) => {
                       if (err) {
@@ -164,6 +165,7 @@ app.post("/update", async (req, res) => {
         $set: {
           answer: req.body.answer,
           atime: req.body.atime,
+          aemail: req.body.aemail,
           status: "solved",
         },
       },
@@ -171,40 +173,26 @@ app.post("/update", async (req, res) => {
         if (err) {
           res.send({ status: "false" });
         } else {
-          data.updateOne(
-            { question: req.body.question },
-            {
-              $set: {
-                aemail: req.body.aemail,
-              },
-            },
-            (err, item) => {
-              if (err) {
-                res.send({ status: "false" });
-              } else {
-                data.findOne({ question: req.body.question }, (err, item) => {
-                  item.email.forEach((email) => {
-                    transporter.sendMail(
-                      {
-                        from: "gcekcse2020@gmail.com",
-                        to: email,
-                        subject: "Your Doubt Is Solved",
-                        text:
-                          "Questions: " +
-                          item.question +
-                          "\n" +
-                          "Answer: " +
-                          item.answer,
-                      },
-                      (err, data) => {
-                        res.send({ status: "true" });
-                      }
-                    );
-                  });
-                });
-              }
-            }
-          );
+          data.findOne({ question: req.body.question }, (err, item) => {
+            item.email.forEach((email) => {
+              transporter.sendMail(
+                {
+                  from: "gcekcse2020@gmail.com",
+                  to: email,
+                  subject: "Your Doubt Is Solved",
+                  text:
+                    "Questions: " +
+                    item.question +
+                    "\n" +
+                    "Answer: " +
+                    item.answer,
+                },
+                (err, data) => {
+                  res.send({ status: "true" });
+                }
+              );
+            });
+          });
         }
       }
     );
@@ -254,6 +242,26 @@ app.post("/wrong", async (req, res) => {
         res.send({ status: "true" });
       }
     );
+  } else {
+    res.status(404).send({ status: "false" });
+  }
+});
+
+app.post("/delete", async (req, res) => {
+  if (req.body.pass == pass) {
+    questions.deleteOne({ question: req.body.question }, (err, item) => {
+      if (err) {
+        res.send({ status: "false" });
+      } else {
+        data.deleteOne({ question: req.body.question }, (err, item) => {
+          if (err) {
+            res.send({ status: "false" });
+          } else {
+            res.send({ status: "true" });
+          }
+        });
+      }
+    });
   } else {
     res.status(404).send({ status: "false" });
   }
