@@ -66,6 +66,33 @@ app.post("/check", async (req, res) => {
   });
 });
 
+app.post("/change", async (req, res) => {
+  users.findOne({ email: req.body.email }, async (err, item) => {
+    if (err || !item) {
+      res.status(404).send({ status: "false" });
+    } else {
+      let isMatch = await bcrypt.compare(req.body.pass, item.pass);
+
+      if (isMatch) {
+        let newPass = await bcrypt.hash(req.body.newPass, 8);
+        users.updateOne(
+          { email: req.body.email },
+          { pass: newPass },
+          (err, item) => {
+            if (err) {
+              res.send({ status: "false" });
+            } else {
+              res.send({ status: "true", api: newPass });
+            }
+          }
+        );
+      } else {
+        res.status(404).send({ status: "false" });
+      }
+    }
+  });
+});
+
 app.post("/get", async (req, res) => {
   users.findOne({ email: req.body.email }, (err, item) => {
     if (req.body.pass == item.pass) {
