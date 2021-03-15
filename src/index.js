@@ -159,7 +159,7 @@ app.post("/set", async (req, res) => {
 
 app.post("/update", async (req, res) => {
   if (req.body.pass == pass) {
-    question.findOne(
+    questions.findOne(
       {
         question: req.body.question,
       },
