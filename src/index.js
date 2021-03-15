@@ -72,11 +72,11 @@ app.post("/get", async (req, res) => {
     }
 
     if (req.body.topic) {
-      data.status = req.body.topic;
+      data.topic = req.body.topic;
     }
 
     if (req.body.module) {
-      data.status = req.body.module;
+      data.module = req.body.module;
     }
 
     if (req.body.quest) {
