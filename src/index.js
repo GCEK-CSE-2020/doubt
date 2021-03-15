@@ -297,9 +297,9 @@ app.post("/delete_answer", async (req, res) => {
       (err, item) => {
         if (err) {
           res.send({ status: "false" });
+        } else {
+          res.send({ status: "true" });
         }
-
-        res.send({ status: "true" });
       }
     );
   } else {
