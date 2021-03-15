@@ -11,6 +11,7 @@ const client = new MongoClient(
   { useUnifiedTopology: true }
 );
 let questions;
+let data;
 let transporter;
 let pass = process.env.AUTH;
 
@@ -20,6 +21,7 @@ async function run() {
 
     let db = await client.db("cluster0");
     questions = await db.collection("questions");
+    data = await db.collection("data");
     await questions.createIndex({ question: "text", description: "text" });
 
     transporter = await nodemailer.createTransport({
@@ -124,15 +126,26 @@ app.post("/set", async (req, res) => {
                 status: "unsolved",
                 topic: req.body.topic,
                 module: req.body.module,
-                email: req.body.email,
-                aemail: "",
               },
               (err, result) => {
                 if (err) {
                   res.send({ status: "false" });
+                } else {
+                  data.insertOne(
+                    {
+                      question: req.body.question,
+                      email: [req.body.email],
+                      aemail: "",
+                    },
+                    (err, result) => {
+                      if (err) {
+                        res.send({ status: "false" });
+                      } else {
+                        res.send({ status: "true" });
+                      }
+                    }
+                  );
                 }
-
-                res.send({ status: "true" });
               }
             );
           }
@@ -152,34 +165,77 @@ app.post("/update", async (req, res) => {
           answer: req.body.answer,
           atime: req.body.atime,
           status: "solved",
-          aemail: req.body.aemail,
         },
       },
       (err, item) => {
         if (err) {
           res.send({ status: "false" });
         } else {
-          questions.findOne({ question: req.body.question }, (err, item) => {
-            transporter.sendMail(
-              {
-                from: "gcekcse2020@gmail.com",
-                to: item.email,
-                subject: "Your Doubt Is Solved",
-                text:
-                  "Questions: " +
-                  item.question +
-                  "\n" +
-                  "Answer: " +
-                  item.answer,
+          data.updateOne(
+            { question: req.body.question },
+            {
+              $set: {
+                aemail: req.body.aemail,
               },
-              (err, data) => {
-                res.send({ status: "true" });
+            },
+            (err, item) => {
+              if (err) {
+                res.send({ status: "false" });
+              } else {
+                data.findOne({ question: req.body.question }, (err, item) => {
+                  item.email.forEach((email) => {
+                    transporter.sendMail(
+                      {
+                        from: "gcekcse2020@gmail.com",
+                        to: email,
+                        subject: "Your Doubt Is Solved",
+                        text:
+                          "Questions: " +
+                          item.question +
+                          "\n" +
+                          "Answer: " +
+                          item.answer,
+                      },
+                      (err, data) => {
+                        res.send({ status: "true" });
+                      }
+                    );
+                  });
+                });
               }
-            );
-          });
+            }
+          );
         }
       }
     );
+  } else {
+    res.status(404).send({ status: "false" });
+  }
+});
+
+app.post("/subscribe", async (req, res) => {
+  if (req.body.pass == pass) {
+    data.findOne({ question: req.body.question }, (err, item) => {
+      if (err) {
+        res.send({ status: "false" });
+      } else {
+        data.updateOne(
+          { question: req.body.question },
+          {
+            $set: {
+              email: [...item.email, req.body.email],
+            },
+          },
+          (err, item) => {
+            if (err) {
+              res.send({ status: "false" });
+            } else {
+              res.send({ status: "true" });
+            }
+          }
+        );
+      }
+    });
   } else {
     res.status(404).send({ status: "false" });
   }
