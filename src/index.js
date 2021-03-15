@@ -113,7 +113,7 @@ app.post("/set", async (req, res) => {
         if (err) {
           res.send({ status: "false" });
         } else {
-          if (items != []) {
+          if (items) {
             res.send({ status: "check" });
           } else {
             questions.insertOne(
@@ -159,40 +159,55 @@ app.post("/set", async (req, res) => {
 
 app.post("/update", async (req, res) => {
   if (req.body.pass == pass) {
-    questions.updateOne(
-      { question: req.body.question },
+    question.findOne(
       {
-        $set: {
-          answer: req.body.answer,
-          atime: req.body.atime,
-          aemail: req.body.aemail,
-          status: "solved",
-        },
+        question: req.body.question,
       },
       (err, item) => {
         if (err) {
           res.send({ status: "false" });
         } else {
-          data.findOne({ question: req.body.question }, (err, item) => {
-            item.email.forEach((email) => {
-              transporter.sendMail(
-                {
-                  from: "gcekcse2020@gmail.com",
-                  to: email,
-                  subject: "Your Doubt Is Solved",
-                  text:
-                    "Questions: " +
-                    item.question +
-                    "\n" +
-                    "Answer: " +
-                    item.answer,
+          if (item.answer) {
+            res.send({ status: "check" });
+          } else {
+            questions.updateOne(
+              { question: req.body.question },
+              {
+                $set: {
+                  answer: req.body.answer,
+                  atime: req.body.atime,
+                  aemail: req.body.aemail,
+                  status: "solved",
                 },
-                (err, data) => {
-                  res.send({ status: "true" });
+              },
+              (err, item) => {
+                if (err) {
+                  res.send({ status: "false" });
+                } else {
+                  data.findOne({ question: req.body.question }, (err, item) => {
+                    item.email.forEach((email) => {
+                      transporter.sendMail(
+                        {
+                          from: "gcekcse2020@gmail.com",
+                          to: email,
+                          subject: "Your Doubt Is Solved",
+                          text:
+                            "Questions: " +
+                            item.question +
+                            "\n" +
+                            "Answer: " +
+                            item.answer,
+                        },
+                        (err, data) => {
+                          res.send({ status: "true" });
+                        }
+                      );
+                    });
+                  });
                 }
-              );
-            });
-          });
+              }
+            );
+          }
         }
       }
     );
