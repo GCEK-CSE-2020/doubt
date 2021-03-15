@@ -44,7 +44,13 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
-app.options("*", cors());
+app.options(
+  "*",
+  cors({
+    origin: "https://gcekcse2020.netlify.app",
+    optionsSuccessStatus: 200,
+  })
+);
 
 app.get("/", (req, res) => {
   res.send("welcome");
