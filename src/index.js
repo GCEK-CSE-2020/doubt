@@ -83,7 +83,7 @@ app.post("/change", async (req, res) => {
         let newPass = await bcrypt.hash(req.body.newPass, 8);
         users.updateOne(
           { email: req.body.email },
-          { pass: newPass },
+          { $set: { pass: newPass } },
           (err, item) => {
             if (err) {
               res.send({ status: "false" });
