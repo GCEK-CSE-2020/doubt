@@ -1,5 +1,4 @@
 const express = require("express");
-var cors = require("cors");
 const { MongoClient } = require("mongodb");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
@@ -43,14 +42,17 @@ run();
 const app = express();
 
 app.use(express.json());
-app.use(cors());
-app.options(
-  "*",
-  cors({
-    origin: "https://gcekcse2020.netlify.app",
-    optionsSuccessStatus: 200,
-  })
-);
+app.use((req, res, next) => {
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://gcekcse2020.netlify.app"
+  );
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 
 app.get("/", (req, res) => {
   res.send("welcome");
