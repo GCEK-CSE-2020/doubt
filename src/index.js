@@ -230,10 +230,10 @@ app.post("/update", async (req, res) => {
                               subject: "Your Doubt Is Solved",
                               text:
                                 "Questions: " +
-                                item.question +
+                                req.body.question +
                                 "\n" +
                                 "Answer: " +
-                                item.answer,
+                                req.body.answer,
                             },
                             (err, data) => {
                               res.send({ status: "true" });
