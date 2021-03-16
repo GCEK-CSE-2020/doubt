@@ -45,10 +45,6 @@ app.use(express.json());
 
 app.use(express.static("../client/dist"));
 
-app.use(function (req, res) {
-  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
-});
-
 app.post("/check", async (req, res) => {
   users.findOne({ email: req.body.email }, async (err, item) => {
     if (err || !item) {
