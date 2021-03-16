@@ -3,6 +3,7 @@ const { MongoClient } = require("mongodb");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
+const path = require("path");
 
 const client = new MongoClient(
   "mongodb+srv://gcekcse2020:" +
@@ -43,7 +44,11 @@ const app = express();
 
 app.use(express.json());
 
-app.use(express.static("../client/dist"));
+app.use(express.static(path.join(__dirname, "../client/dist")));
+
+app.get("/", async (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+});
 
 app.post("/check", async (req, res) => {
   users.findOne({ email: req.body.email }, async (err, item) => {
