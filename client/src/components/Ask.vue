@@ -25,10 +25,28 @@
         title="Type Your Question Here"
       />
       <label>Description:</label>
-      <textarea
+      <editor
         v-model="description"
         placeholder="Describe Your Question Here"
         title="Describe Your Question Here"
+        api-key="3o38mbryyt3pos71f5rbt260nslesc2xzztmcp9cdzk33tku"
+        :init="{
+          menubar: false,
+          height: '10em',
+          width: '17em',
+          resize: false,
+          statusbar: false,
+          skin: 'oxide-dark',
+          content_css: 'dark',
+          plugins: [
+            'advlist autolink lists link image charmap print preview anchor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table paste code',
+          ],
+          toolbar:
+            'undo redo | bold italic backcolor | \
+             bullist image link',
+        }"
       />
       <input type="button" @click="ask" value="Ask" />
       <input type="button" @click="setAsk" value="Cancel" />
@@ -38,6 +56,7 @@
 
 <script>
 import fetchData from "../scripts/fetchData";
+import Editor from "@tinymce/tinymce-vue";
 
 export default {
   name: "Ask",
@@ -47,6 +66,10 @@ export default {
     fetchQuestions: Function,
     email: String,
     api: String,
+  },
+
+  components: {
+    Editor,
   },
 
   data() {
@@ -114,8 +137,7 @@ div {
 }
 
 input,
-select,
-textarea {
+select {
   width: 20em;
   height: 2em;
   margin: 0.5em;
@@ -140,9 +162,12 @@ select {
 input[type="text"] {
   height: 1.5em;
 }
+</style>
 
-textarea {
-  resize: none;
-  height: 10em;
+<style>
+.tox-tinymce {
+  border-radius: 0.125em !important;
+  margin: 0.5em !important;
+  box-shadow: 0.125em 0.125em 0.25em 0 rgba(0, 0, 0, 0.25) !important;
 }
 </style>

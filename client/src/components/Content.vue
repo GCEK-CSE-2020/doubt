@@ -13,7 +13,7 @@
       <label class="head">{{ details.question }}</label>
       <br />
       <span>{{ details.time }}</span>
-      <p>{{ details.description }}</p>
+      {{ details.description }}
     </div>
 
     <Solved

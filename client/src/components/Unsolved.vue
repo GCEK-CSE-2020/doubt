@@ -2,12 +2,30 @@
   <aside>
     <div>
       <label class="head">{{ details.question }}</label>
-      <p>{{ details.description }}</p>
+      {{ details.description }}
       <label v-if="details.email != email">Your Answer:</label>
-      <textarea
+      <editor
         v-model="answer"
         placeholder="Describe Your Answer Here"
         title="Describe Your Answer Here"
+        api-key="3o38mbryyt3pos71f5rbt260nslesc2xzztmcp9cdzk33tku"
+        :init="{
+          menubar: false,
+          height: '10em',
+          width: '17em',
+          resize: false,
+          statusbar: false,
+          skin: 'oxide-dark',
+          content_css: 'dark',
+          plugins: [
+            'advlist autolink lists link image charmap print preview anchor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table paste code',
+          ],
+          toolbar:
+            'undo redo | bold italic backcolor | \
+             bullist image link',
+        }"
         v-if="details.email != email"
       />
       <input
@@ -35,6 +53,7 @@
 
 <script>
 import fetchData from "../scripts/fetchData";
+import Editor from "@tinymce/tinymce-vue";
 
 export default {
   name: "Ask",
@@ -44,6 +63,10 @@ export default {
     details: Object,
     email: String,
     api: String,
+  },
+
+  components: {
+    Editor,
   },
 
   data() {

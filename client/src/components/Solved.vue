@@ -2,9 +2,9 @@
   <aside>
     <div>
       <p class="head">{{ details.question }}</p>
-      <p>{{ details.description }}</p>
+      {{ details.description }}
       <label>Answer:</label>
-      <p>{{ details.answer }}</p>
+      {{ details.answer }}
       <input
         type="button"
         @click="deleteQuestion"
