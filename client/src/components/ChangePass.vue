@@ -1,6 +1,6 @@
 <template>
   <aside>
-    <div>
+    <div class="grid">
       <label>Old Password:</label>
       <input
         v-model="pass"
@@ -77,7 +77,7 @@ aside {
   place-items: center;
 }
 
-div {
+.grid {
   display: grid;
   text-align: center;
   background: #000;

@@ -1,6 +1,6 @@
 <template>
   <aside>
-    <div>
+    <div class="grid">
       <p class="head">{{ details.question }}</p>
       <div v-html="details.description"></div>
       <label>Answer:</label>
@@ -116,7 +116,7 @@ aside {
   place-items: center;
 }
 
-div {
+.grid {
   display: grid;
   text-align: center;
   width: 18em;

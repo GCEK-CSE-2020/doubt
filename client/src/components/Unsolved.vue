@@ -1,6 +1,6 @@
 <template>
   <aside>
-    <div>
+    <div class="grid">
       <label class="head">{{ details.question }}</label>
       <div v-html="details.description"></div>
       <label v-if="details.email != email">Your Answer:</label>
@@ -157,7 +157,7 @@ aside {
   place-items: center;
 }
 
-div {
+.grid {
   display: grid;
   text-align: center;
   width: 18em;

@@ -1,6 +1,6 @@
 <template>
   <aside>
-    <div>
+    <div class="grid">
       <label>Topic:</label>
       <select v-model="topic">
         <option value="lac" selected>Linear Algebra And Calculus</option>
@@ -126,7 +126,7 @@ aside {
   place-items: center;
 }
 
-div {
+.grid {
   display: grid;
   text-align: center;
   background: #000;
