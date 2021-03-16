@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon .",
+    "dev": "cd client && npm run build && cd .. && nodemon .",
     "heroku-postbuild": "cd client && npm install && npm install --dev && npm run build"
   },
   "dependencies": {
