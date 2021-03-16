@@ -1,5 +1,5 @@
 export default function fetchData(url, postData, func) {
-  fetch("https://gcekcse2020.herokuapp.com/" + url, {
+  fetch("/" + url, {
     method: "POST",
     body: JSON.stringify(postData),
     headers: {

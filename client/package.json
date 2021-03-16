@@ -2,15 +2,17 @@
   "name": "doubt-front",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5000",
+  "proxy": "http://localhost:3000",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "start": "npm run build && serve -s dist",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "core-js": "^3.8.3",
     "register-service-worker": "^1.7.2",
+    "serve": "^11.3.2",
     "vue": "^3.0.4"
   },
   "devDependencies": {
