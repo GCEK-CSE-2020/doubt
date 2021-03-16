@@ -5,9 +5,8 @@
   "license": "MIT",
   "scripts": {
     "server": "nodemon .",
-    "client": "cd client && npm install && npm run start",
-    "client-dev": "cd client && npm run start",
-    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client-dev\"",
+    "heroku-postbuild": "cd client && npm install",
+    "client": "cd client && npm run start",
     "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },
   "dependencies": {
