@@ -2,7 +2,7 @@
   <aside>
     <div>
       <label class="head">{{ details.question }}</label>
-      {{ details.description }}
+      <div v-html="details.description"></div>
       <label v-if="details.email != email">Your Answer:</label>
       <editor
         v-model="answer"

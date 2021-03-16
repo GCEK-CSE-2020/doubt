@@ -13,7 +13,7 @@
       <label class="head">{{ details.question }}</label>
       <br />
       <span>{{ details.time }}</span>
-      {{ details.description }}
+      <div v-html="details.description"></div>
     </div>
 
     <Solved
