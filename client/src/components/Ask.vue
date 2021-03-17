@@ -40,12 +40,11 @@
           skin: 'oxide-dark',
           content_css: 'dark',
           browser_spellcheck: true,
-          plugins: [
-            'advlist autolink lists link image charmap anchor media paste',
-          ],
+          plugins: 'autolink lists link image media',
           toolbar:
             'undo redo | bold italic underline | \
              image media link | bullist numlist removeformat',
+          relative_urls: false,
         }"
       />
       <input type="button" @click="ask" value="Ask" />
