@@ -25,17 +25,12 @@
           relative_urls: false,
         }"
       />
+      <input type="button" @click="post" value="Post Answer" />
       <input
         type="button"
         @click="deleteQuestion"
         value="Delete Question"
         v-if="details.email == email"
-      />
-      <input
-        type="button"
-        @click="post"
-        value="Post Answer"
-        v-if="details.email != email"
       />
       <input
         type="button"
