@@ -2,7 +2,7 @@
   <aside>
     <div class="grid">
       <label class="head">{{ details.question }}</label>
-      <div v-html="details.description"></div>
+      <div v-html="details.description" class="detail"></div>
       <label v-if="details.email != email">Your Answer:</label>
       <editor
         v-model="answer"
@@ -13,7 +13,7 @@
           menubar: false,
           branding: false,
           height: '10em',
-          width: '17em',
+          min_width: '17em',
           skin: 'oxide-dark',
           content_css: 'dark',
           browser_spellcheck: true,
@@ -149,8 +149,6 @@ aside {
 }
 
 .grid {
-  display: grid;
-  justify-content: center;
   text-align: center;
   word-wrap: break-word;
   background: #000;

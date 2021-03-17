@@ -1,51 +1,56 @@
 <template>
   <aside>
     <div class="grid">
-      <label>Topic:</label>
-      <select v-model="topic">
-        <option value="lac" selected>Linear Algebra And Calculus</option>
-        <option value="ec">Engineering Chemistry</option>
-        <option value="eg">Engineering Graphics</option>
-        <option value="bee">BEE/BEC</option>
-        <option value="ls">Life Skill</option>
-      </select>
-      <label>Module:</label>
-      <select v-model="module">
-        <option value="1" selected>Module 1</option>
-        <option value="2">Module 2</option>
-        <option value="3">Module 3</option>
-        <option value="4">Module 4</option>
-        <option value="5">Module 5</option>
-      </select>
-      <label>Question:</label>
-      <input
-        type="text"
-        v-model="question"
-        spellcheck="true"
-        placeholder="Type Your Question Here"
-        title="Type Your Question Here"
-      />
-      <label>Description:</label>
-      <editor
-        v-model="description"
-        placeholder="Describe Your Question Here"
-        title="Describe Your Question Here"
-        api-key="3o38mbryyt3pos71f5rbt260nslesc2xzztmcp9cdzk33tku"
-        :init="{
-          menubar: false,
-          branding: false,
-          height: '10em',
-          width: '17em',
-          skin: 'oxide-dark',
-          content_css: 'dark',
-          browser_spellcheck: true,
-          plugins: 'autolink lists link image media',
-          toolbar:
-            'undo redo | bold italic underline | \
+      <div>
+        <label>Topic:</label>
+        <select v-model="topic">
+          <option value="lac" selected>Linear Algebra And Calculus</option>
+          <option value="ec">Engineering Chemistry</option>
+          <option value="eg">Engineering Graphics</option>
+          <option value="bee">BEE/BEC</option>
+          <option value="ls">Life Skill</option>
+        </select>
+        <label>Module:</label>
+        <select v-model="module">
+          <option value="1" selected>Module 1</option>
+          <option value="2">Module 2</option>
+          <option value="3">Module 3</option>
+          <option value="4">Module 4</option>
+          <option value="5">Module 5</option>
+        </select>
+      </div>
+      <div>
+        <label>Question:</label>
+        <input
+          type="text"
+          v-model="question"
+          spellcheck="true"
+          placeholder="Type Your Question Here"
+          title="Type Your Question Here"
+        />
+      </div>
+      <div>
+        <label>Description:</label>
+        <editor
+          v-model="description"
+          placeholder="Describe Your Question Here"
+          title="Describe Your Question Here"
+          api-key="3o38mbryyt3pos71f5rbt260nslesc2xzztmcp9cdzk33tku"
+          :init="{
+            menubar: false,
+            branding: false,
+            height: '10em',
+            skin: 'oxide-dark',
+            content_css: 'dark',
+            browser_spellcheck: true,
+            plugins: 'autolink lists link image media',
+            toolbar:
+              'undo redo | bold italic underline | \
              image media link | bullist numlist removeformat',
-          relative_urls: false,
-        }"
-      />
+            relative_urls: false,
+          }"
+        />
+      </div>
       <input type="button" @click="ask" value="Ask" />
       <input type="button" @click="setAsk" value="Cancel" />
     </div>
@@ -118,15 +123,13 @@ aside {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
+  width: 100vw;
   min-height: 100vh;
   display: grid;
   place-items: center;
 }
 
 .grid {
-  display: grid;
-  justify-content: center;
   text-align: center;
   background: #000;
   border: 1px solid #0075d2;
@@ -168,5 +171,25 @@ input[type="text"] {
   border-radius: 0.125em !important;
   margin: 0.5em !important;
   box-shadow: 0.125em 0.125em 0.25em 0 rgba(0, 0, 0, 0.25) !important;
+}
+
+.detail img {
+  max-width: 18em !important;
+  height: auto !important;
+}
+
+.detail iframe {
+  max-width: 18em !important;
+  height: auto !important;
+}
+
+.block img {
+  max-width: 14em !important;
+  height: auto !important;
+}
+
+.block iframe {
+  max-width: 14em !important;
+  height: auto !important;
 }
 </style>

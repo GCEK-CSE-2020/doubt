@@ -2,9 +2,9 @@
   <aside>
     <div class="grid">
       <p class="head">{{ details.question }}</p>
-      <div v-html="details.description"></div>
+      <div v-html="details.description" class="detail"></div>
       <label>Answer:</label>
-      <div v-html="details.answer"></div>
+      <div v-html="details.answer" class="detail"></div>
       <input
         type="button"
         @click="deleteQuestion"
@@ -117,7 +117,6 @@ aside {
 }
 
 .grid {
-  display: grid;
   text-align: center;
   word-wrap: break-word;
   background: #000;
