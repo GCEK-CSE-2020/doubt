@@ -33,6 +33,7 @@
         api-key="3o38mbryyt3pos71f5rbt260nslesc2xzztmcp9cdzk33tku"
         :init="{
           menubar: false,
+          branding: false,
           height: '10em',
           width: '17em',
           skin: 'oxide-dark',
