@@ -33,9 +33,8 @@
         api-key="3o38mbryyt3pos71f5rbt260nslesc2xzztmcp9cdzk33tku"
         :init="{
           menubar: false,
-          min_height: '10em',
-          min_width: '17em',
-          statusbar: false,
+          height: '10em',
+          width: '17em',
           skin: 'oxide-dark',
           content_css: 'dark',
           browser_spellcheck: true,
