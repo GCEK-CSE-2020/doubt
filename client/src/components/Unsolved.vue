@@ -13,7 +13,6 @@
           menubar: false,
           height: '10em',
           width: '17em',
-          resize: false,
           statusbar: false,
           skin: 'oxide-dark',
           content_css: 'dark',
