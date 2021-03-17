@@ -157,7 +157,6 @@ aside {
 .grid {
   display: grid;
   text-align: center;
-  width: 18em;
   word-wrap: break-word;
   background: #000;
   border: 1px solid #0075d2;
