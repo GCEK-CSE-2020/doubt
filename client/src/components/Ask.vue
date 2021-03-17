@@ -33,8 +33,8 @@
         api-key="3o38mbryyt3pos71f5rbt260nslesc2xzztmcp9cdzk33tku"
         :init="{
           menubar: false,
-          height: '10em',
-          width: '17em',
+          min_height: '10em',
+          min_width: '17em',
           statusbar: false,
           skin: 'oxide-dark',
           content_css: 'dark',
@@ -126,6 +126,7 @@ aside {
 
 .grid {
   display: grid;
+  justify-content: center;
   text-align: center;
   background: #000;
   border: 1px solid #0075d2;
