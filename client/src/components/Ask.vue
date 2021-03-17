@@ -21,6 +21,7 @@
       <input
         type="text"
         v-model="question"
+        spellcheck="true"
         placeholder="Type Your Question Here"
         title="Type Your Question Here"
       />
@@ -38,14 +39,13 @@
           statusbar: false,
           skin: 'oxide-dark',
           content_css: 'dark',
+          browser_spellcheck: true,
           plugins: [
-            'advlist autolink lists link image charmap print preview anchor',
-            'searchreplace visualblocks code fullscreen',
-            'insertdatetime media table paste code',
+            'advlist autolink lists link image charmap anchor media paste',
           ],
           toolbar:
-            'undo redo | bold italic backcolor | \
-             bullist image link',
+            'undo redo | bold italic underline | \
+             image media link | bullist numlist removeformat',
         }"
       />
       <input type="button" @click="ask" value="Ask" />

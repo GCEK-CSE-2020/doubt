@@ -104,8 +104,4 @@ input[type="button"] {
   height: 2.5em;
   background: #0075d2;
 }
-
-input[type="text"] {
-  height: 1.5em;
-}
 </style>
