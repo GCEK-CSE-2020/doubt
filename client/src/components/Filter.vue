@@ -113,7 +113,7 @@ export default {
     },
   },
 
-  created() {
+  onCreated() {
     this.fetchQuestions();
   },
 

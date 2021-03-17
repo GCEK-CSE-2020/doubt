@@ -117,6 +117,9 @@ aside {
 }
 
 .grid {
+  display: grid;
+  justify-content: center;
+  width: 18em;
   text-align: center;
   word-wrap: break-word;
   background: #000;

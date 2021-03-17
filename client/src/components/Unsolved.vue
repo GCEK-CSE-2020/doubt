@@ -12,8 +12,9 @@
         :init="{
           menubar: false,
           branding: false,
+          resize: 'both',
+          width: '17.5em',
           height: '10em',
-          min_width: '17em',
           skin: 'oxide-dark',
           content_css: 'dark',
           browser_spellcheck: true,
@@ -149,6 +150,8 @@ aside {
 }
 
 .grid {
+  display: grid;
+  width: auto;
   text-align: center;
   word-wrap: break-word;
   background: #000;
@@ -158,11 +161,10 @@ aside {
   box-shadow: 0.125em 0.125em 0.25em 0 rgba(0, 0, 0, 0.25);
 }
 
-input,
-textarea {
+input {
   width: 20em;
   height: 2em;
-  margin: 0.5em;
+  margin: 0.5em auto;
   background: #444;
   color: #fff;
   border: 1px solid #0075d2;
@@ -175,12 +177,6 @@ input[type="button"] {
   width: 20.5em;
   height: 2.5em;
   background: #0075d2;
-}
-
-textarea {
-  resize: none;
-  width: 20em;
-  height: 10em;
 }
 
 .head {

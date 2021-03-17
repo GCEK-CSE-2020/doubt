@@ -34,7 +34,7 @@ export default {
     };
   },
 
-  created() {
+  onCreated() {
     if (!navigator.onLine) {
       alert("This Application Want Internet To Work");
     }
