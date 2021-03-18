@@ -61,9 +61,9 @@ export default {
           },
           (json) => {
             if (json.status == "true") {
-              this.setSolved();
               document.querySelector(".search").click();
               alert("Successfully Deleted");
+              this.setSolved();
             } else {
               alert("Server Error");
             }
@@ -85,9 +85,9 @@ export default {
           },
           (json) => {
             if (json.status == "true") {
-              this.setSolved();
               document.querySelector(".search").click();
               alert("Successfully Deleted");
+              this.setSolved();
             } else {
               alert("Server Error");
             }
@@ -109,8 +109,8 @@ export default {
           },
           (json) => {
             if (json.status == "true") {
-              this.setSolved();
               alert("Successfully Informed to Responsible Team");
+              this.setSolved();
             } else {
               alert("Server Error");
             }

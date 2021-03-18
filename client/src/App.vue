@@ -26,8 +26,7 @@ export default {
 
   created() {
     if (!navigator.onLine) {
-      alert("This Application Want Internet To Work");
-      window.close();
+      alert("This Application Can't Run Without Internet");
     }
 
     const log = localStorage.getItem("log");
@@ -78,6 +77,7 @@ body {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+  user-select: none;
 }
 
 #app {
@@ -91,7 +91,10 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  user-select: none;
+}
+
+.block {
+  user-select: auto;
 }
 
 input[type="button"],

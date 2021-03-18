@@ -54,8 +54,8 @@ export default {
               let log = JSON.parse(localStorage.getItem("log"));
               log.api = json.newPass;
               localStorage.setItem("log", JSON.stringify(log));
-              this.setChange();
               alert("Password Changed");
+              this.setChange();
             } else {
               alert("Server Error");
             }

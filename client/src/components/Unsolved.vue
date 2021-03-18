@@ -83,9 +83,9 @@ export default {
           },
           (json) => {
             if (json.status == "true") {
-              this.setUnsolved();
               document.querySelector(".search").click();
               alert("Successfully Deleted");
+              this.setUnsolved();
             } else {
               alert("Server Error");
             }
@@ -107,8 +107,8 @@ export default {
           },
           (json) => {
             if (json.status == "true") {
-              this.setUnsolved();
               document.querySelector(".search").click();
+              this.setUnsolved();
             } else if (json.status == "check") {
               alert("This Question Is Already Answered");
             } else {
@@ -131,8 +131,8 @@ export default {
         },
         (json) => {
           if (json.status == "true") {
-            this.setUnsolved();
             alert("Successfully Subscribed");
+            this.setUnsolved();
           } else {
             alert("Server Error");
           }
