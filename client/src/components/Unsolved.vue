@@ -1,45 +1,47 @@
 <template>
   <aside>
-    <div class="grid">
+    <img src="../assets/back.svg" @click="setUnsolved" alt="Go Back" />
+    <div class="block">
       <label class="head">{{ details.question }}</label>
-      <div v-html="details.description" class="detail"></div>
-      <label v-if="details.email != email">Your Answer:</label>
-      <editor
-        v-model="answer"
-        placeholder="Describe Your Answer Here"
-        title="Describe Your Answer Here"
-        api-key="3o38mbryyt3pos71f5rbt260nslesc2xzztmcp9cdzk33tku"
-        :init="{
-          menubar: false,
-          branding: false,
-          resize: 'both',
-          width: '17.5em',
-          height: '10em',
-          skin: 'oxide-dark',
-          content_css: 'dark',
-          browser_spellcheck: true,
-          plugins: 'autolink lists link image media',
-          toolbar:
-            'undo redo | bold italic underline | \
-             image media link | bullist numlist removeformat',
-          relative_urls: false,
-        }"
-      />
-      <input type="button" @click="post" value="Post Answer" />
-      <input
-        type="button"
-        @click="deleteQuestion"
-        value="Delete Question"
-        v-if="details.email == email"
-      />
-      <input
-        type="button"
-        @click="subscribe"
-        value="Subscribe For Answer"
-        v-if="details.email != email"
-      />
-      <input type="button" @click="setUnsolved" value="Cancel" />
+      <br />
+      <span>{{ details.time }}</span>
+      <div v-html="details.description"></div>
     </div>
+    <label>Your Answer:</label>
+    <editor
+      v-model="answer"
+      placeholder="Describe Your Answer Here"
+      title="Describe Your Answer Here"
+      api-key="3o38mbryyt3pos71f5rbt260nslesc2xzztmcp9cdzk33tku"
+      :init="{
+        menubar: false,
+        branding: false,
+        resize: 'both',
+        width: 'calc(100vw - 2em)',
+        height: '10em',
+        skin: 'oxide-dark',
+        content_css: 'dark',
+        browser_spellcheck: true,
+        plugins: 'autolink lists link image media',
+        toolbar:
+          'undo redo | bold italic underline | \
+             image media link | bullist numlist removeformat',
+        relative_urls: false,
+      }"
+    />
+    <input type="button" @click="post" value="Post Answer" />
+    <input
+      type="button"
+      @click="deleteQuestion"
+      value="Delete Question"
+      v-if="details.email == email"
+    />
+    <input
+      type="button"
+      @click="subscribe"
+      value="Subscribe For Answer"
+      v-if="details.email != email"
+    />
   </aside>
 </template>
 
@@ -69,23 +71,27 @@ export default {
 
   methods: {
     deleteQuestion() {
-      fetchData(
-        "delete",
-        {
-          question: this.details.question,
-          email: this.email,
-          pass: this.api,
-        },
-        (json) => {
-          if (json.status == "true") {
-            this.setUnsolved();
-            document.querySelector(".search").click();
-            alert("Successfully Deleted");
-          } else {
-            alert("Server Error");
+      const conf = confirm("Are You Sure?");
+
+      if (conf) {
+        fetchData(
+          "delete",
+          {
+            question: this.details.question,
+            email: this.email,
+            pass: this.api,
+          },
+          (json) => {
+            if (json.status == "true") {
+              this.setUnsolved();
+              document.querySelector(".search").click();
+              alert("Successfully Deleted");
+            } else {
+              alert("Server Error");
+            }
           }
-        }
-      );
+        );
+      }
     },
 
     post() {
@@ -139,49 +145,61 @@ export default {
 
 <style scoped>
 aside {
-  background: rgba(0, 0, 0, 0.5);
   position: absolute;
   top: 0;
   left: 0;
-  min-height: 100vh;
-  right: 0;
-  display: grid;
-  place-items: center;
-}
-
-.grid {
-  display: grid;
-  width: auto;
+  z-index: 3;
+  width: 100vw;
+  height: 100vh;
+  padding-top: 2em;
   text-align: center;
-  word-wrap: break-word;
   background: #000;
-  border: 1px solid #0075d2;
-  border-radius: 0.125em;
-  padding: 0.5em;
-  box-shadow: 0.125em 0.125em 0.25em 0 rgba(0, 0, 0, 0.25);
+  overflow: auto;
 }
 
 input {
-  width: 20em;
+  width: calc(100vw - 2em);
   height: 2em;
-  margin: 0.5em auto;
-  background: #444;
+  margin: 0.5em 1em;
   color: #fff;
+  background: #0075d2;
   border: 1px solid #0075d2;
-  border-radius: 0.125em;
+  border-radius: 0.25em;
   padding: 0.25em;
   box-shadow: 0.125em 0.125em 0.25em 0 rgba(0, 0, 0, 0.25);
 }
 
-input[type="button"] {
-  width: 20.5em;
-  height: 2.5em;
-  background: #0075d2;
+img {
+  width: 1em;
+  position: absolute;
+  left: 1em;
+  top: 1em;
+  z-index: 4;
+}
+
+.block {
+  cursor: pointer;
+  margin: 1em;
+  padding: 0.5em 1em;
+  background: #222;
+  width: calc(100vw - 2em);
+  border: 1px solid #0075d2;
+  border-radius: 0.25em;
+  word-wrap: break-word;
 }
 
 .head {
   font-size: 1.2em;
   font-weight: bold;
   color: #0075d2;
+}
+
+span {
+  font-size: 0.75em;
+  color: #999;
+}
+
+.block div {
+  text-align: left;
 }
 </style>

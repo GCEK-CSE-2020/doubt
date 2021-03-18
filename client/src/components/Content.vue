@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <div class="content">
     <div
       class="block"
       v-for="(details, index) in data"
@@ -15,23 +15,23 @@
       <span>{{ details.time }}</span>
       <div v-html="details.description"></div>
     </div>
+  </div>
 
-    <Solved
-      v-bind:setSolved="setSolved"
-      v-bind:details="current"
-      v-bind:email="email"
-      v-bind:api="api"
-      v-if="solved"
-    />
+  <Solved
+    :setSolved="setSolved"
+    :details="current"
+    :email="email"
+    :api="api"
+    v-if="solved"
+  />
 
-    <Unsolved
-      v-bind:setUnsolved="setUnsolved"
-      v-bind:details="current"
-      v-bind:email="email"
-      v-bind:api="api"
-      v-if="unsolved"
-    />
-  </section>
+  <Unsolved
+    :setUnsolved="setUnsolved"
+    :details="current"
+    :email="email"
+    :api="api"
+    v-if="unsolved"
+  />
 </template>
 
 <script>
@@ -82,15 +82,28 @@ export default {
 </script>
 
 <style scoped>
+.content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  padding-top: 2em;
+  z-index: 1;
+  text-align: center;
+  background: #000;
+  overflow: auto;
+}
+
 .block {
   cursor: pointer;
-  margin: 0.5em;
+  margin: 1em;
   padding: 0.5em 1em;
-  background: #444;
-  width: calc(100vw - 5em);
+  background: #222;
+  width: calc(100vw - 2em);
   border: 1px solid #0075d2;
-  border-radius: 0.125em;
-  box-shadow: 0.125em 0.125em 0.25em 0 rgba(0, 0, 0, 0.25);
+  border-radius: 0.25em;
+  word-wrap: break-word;
 }
 
 .head {
@@ -104,7 +117,7 @@ span {
   color: #999;
 }
 
-.block {
-  word-wrap: break-word;
+.block div {
+  text-align: left;
 }
 </style>

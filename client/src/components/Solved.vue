@@ -1,30 +1,36 @@
 <template>
   <aside>
-    <div class="grid">
-      <p class="head">{{ details.question }}</p>
-      <div v-html="details.description" class="detail"></div>
-      <label>Answer:</label>
-      <div v-html="details.answer" class="detail"></div>
-      <input
-        type="button"
-        @click="deleteQuestion"
-        value="Delete Question"
-        v-if="details.email == email"
-      />
-      <input
-        type="button"
-        @click="deleteAnswer"
-        value="Delete Answer"
-        v-if="details.email == email || details.aemail == email"
-      />
-      <input
-        type="button"
-        @click="wrong"
-        value="This Answer Is Wrong"
-        v-if="details.email != email"
-      />
-      <input type="button" @click="setSolved" value="Close" />
+    <img src="../assets/back.svg" @click="setSolved" alt="Go Back" />
+    <div class="block">
+      <label class="head">{{ details.question }}</label>
+      <br />
+      <span>{{ details.time }}</span>
+      <div v-html="details.description"></div>
     </div>
+    <div class="block">
+      <label class="head">Answer</label>
+      <br />
+      <span>{{ details.atime }}</span>
+      <div v-html="details.answer" class="detail"></div>
+    </div>
+    <input
+      type="button"
+      @click="deleteQuestion"
+      value="Delete Question"
+      v-if="details.email == email"
+    />
+    <input
+      type="button"
+      @click="deleteAnswer"
+      value="Delete Answer"
+      v-if="details.email == email || details.aemail == email"
+    />
+    <input
+      type="button"
+      @click="wrong"
+      value="This Answer Is Wrong"
+      v-if="details.email != email"
+    />
   </aside>
 </template>
 
@@ -43,62 +49,74 @@ export default {
 
   methods: {
     deleteQuestion() {
-      fetchData(
-        "delete",
-        {
-          question: this.details.question,
-          email: this.email,
-          pass: this.api,
-        },
-        (json) => {
-          if (json.status == "true") {
-            this.setSolved();
-            document.querySelector(".search").click();
-            alert("Successfully Deleted");
-          } else {
-            alert("Server Error");
+      const conf = confirm("Are You Sure?");
+
+      if (conf) {
+        fetchData(
+          "delete",
+          {
+            question: this.details.question,
+            email: this.email,
+            pass: this.api,
+          },
+          (json) => {
+            if (json.status == "true") {
+              this.setSolved();
+              document.querySelector(".search").click();
+              alert("Successfully Deleted");
+            } else {
+              alert("Server Error");
+            }
           }
-        }
-      );
+        );
+      }
     },
 
     deleteAnswer() {
-      fetchData(
-        "delete_answer",
-        {
-          question: this.details.question,
-          email: this.email,
-          pass: this.api,
-        },
-        (json) => {
-          if (json.status == "true") {
-            this.setSolved();
-            document.querySelector(".search").click();
-            alert("Successfully Deleted");
-          } else {
-            alert("Server Error");
+      const conf = confirm("Are You Sure?");
+
+      if (conf) {
+        fetchData(
+          "delete_answer",
+          {
+            question: this.details.question,
+            email: this.email,
+            pass: this.api,
+          },
+          (json) => {
+            if (json.status == "true") {
+              this.setSolved();
+              document.querySelector(".search").click();
+              alert("Successfully Deleted");
+            } else {
+              alert("Server Error");
+            }
           }
-        }
-      );
+        );
+      }
     },
 
     wrong() {
-      fetchData(
-        "wrong",
-        {
-          question: this.details.question,
-          email: this.email,
-          pass: this.api,
-        },
-        (json) => {
-          if (json.status == "true") {
-            this.setSolved();
-            alert("Successfully Informed to Responsible Team");
-          } else {
-            alert("Server Error");
+      const conf = confirm("Are You Sure?");
+
+      if (conf) {
+        fetchData(
+          "wrong",
+          {
+            question: this.details.question,
+            email: this.email,
+            pass: this.api,
+          },
+          (json) => {
+            if (json.status == "true") {
+              this.setSolved();
+              alert("Successfully Informed to Responsible Team");
+            } else {
+              alert("Server Error");
+            }
           }
-        }
-      );
+        );
+      }
     },
   },
 };
@@ -106,44 +124,61 @@ export default {
 
 <style scoped>
 aside {
-  background: rgba(0, 0, 0, 0.5);
   position: absolute;
   top: 0;
   left: 0;
-  min-height: 100vh;
-  right: 0;
-  display: grid;
-  place-items: center;
-}
-
-.grid {
-  display: grid;
-  justify-content: center;
-  width: 18em;
+  z-index: 3;
+  width: 100vw;
+  height: 100vh;
+  padding-top: 2em;
   text-align: center;
-  word-wrap: break-word;
   background: #000;
-  border: 1px solid #0075d2;
-  border-radius: 0.125em;
-  padding: 0.5em;
-  box-shadow: 0.125em 0.125em 0.25em 0 rgba(0, 0, 0, 0.25);
+  overflow: auto;
 }
 
 input {
-  width: 20.5em;
-  height: 2.5em;
-  background: #0075d2;
-  margin: 0.5em;
+  width: calc(100vw - 2em);
+  height: 2em;
+  margin: 0.5em 1em;
   color: #fff;
+  background: #0075d2;
   border: 1px solid #0075d2;
-  border-radius: 0.125em;
+  border-radius: 0.25em;
   padding: 0.25em;
   box-shadow: 0.125em 0.125em 0.25em 0 rgba(0, 0, 0, 0.25);
+}
+
+img {
+  width: 1em;
+  position: absolute;
+  left: 1em;
+  top: 1em;
+  z-index: 4;
+}
+
+.block {
+  cursor: pointer;
+  margin: 1em;
+  padding: 0.5em 1em;
+  background: #222;
+  width: calc(100vw - 2em);
+  border: 1px solid #0075d2;
+  border-radius: 0.25em;
+  word-wrap: break-word;
 }
 
 .head {
   font-size: 1.2em;
   font-weight: bold;
   color: #0075d2;
+}
+
+span {
+  font-size: 0.75em;
+  color: #999;
+}
+
+.block div {
+  text-align: left;
 }
 </style>

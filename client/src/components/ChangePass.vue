@@ -1,23 +1,21 @@
 <template>
   <aside>
-    <div class="grid">
-      <label>Old Password:</label>
-      <input
-        v-model="pass"
-        type="password"
-        placeholder="Type Your Password Here"
-        title="Type Your Password Here"
-      />
-      <label>New Password:</label>
-      <input
-        v-model="newPass"
-        type="password"
-        placeholder="Type Your New Password Here"
-        title="Type Your New Password Here"
-      />
-      <input type="button" @click="change" value="Change Password" />
-      <input type="button" @click="setChange" value="Cancel" />
-    </div>
+    <img src="../assets/back.svg" @click="setChange" alt="Go Back" />
+    <label>Old Password:</label>
+    <input
+      v-model="pass"
+      type="password"
+      placeholder="Type Your Password Here"
+      title="Type Your Password Here"
+    />
+    <label>New Password:</label>
+    <input
+      v-model="newPass"
+      type="password"
+      placeholder="Type Your New Password Here"
+      title="Type Your New Password Here"
+    />
+    <input type="button" @click="change" value="Change Password" />
   </aside>
 </template>
 
@@ -41,25 +39,29 @@ export default {
 
   methods: {
     change() {
-      fetchData(
-        "change",
-        {
-          email: this.email,
-          pass: this.pass,
-          newPass: this.newPass,
-        },
-        (json) => {
-          if (json.status == "true") {
-            let log = JSON.parse(localStorage.getItem("log"));
-            log.api = json.newPass;
-            localStorage.setItem("log", JSON.stringify(log));
-            this.setChange();
-            alert("Password Changed");
-          } else {
-            alert("Server Error");
+      const conf = confirm("Are You Sure?");
+
+      if (conf) {
+        fetchData(
+          "change",
+          {
+            email: this.email,
+            pass: this.pass,
+            newPass: this.newPass,
+          },
+          (json) => {
+            if (json.status == "true") {
+              let log = JSON.parse(localStorage.getItem("log"));
+              log.api = json.newPass;
+              localStorage.setItem("log", JSON.stringify(log));
+              this.setChange();
+              alert("Password Changed");
+            } else {
+              alert("Server Error");
+            }
           }
-        }
-      );
+        );
+      }
     },
   },
 };
@@ -67,41 +69,39 @@ export default {
 
 <style scoped>
 aside {
-  background: rgba(0, 0, 0, 0.5);
   position: absolute;
   top: 0;
   left: 0;
-  min-height: 100vh;
-  right: 0;
-  display: grid;
-  place-items: center;
-}
-
-.grid {
-  display: grid;
+  width: 100vw;
+  height: 100vh;
+  padding-top: 2em;
+  z-index: 3;
   text-align: center;
   background: #000;
-  border: 1px solid #0075d2;
-  border-radius: 0.125em;
-  padding: 0.5em;
-  box-shadow: 0.125em 0.125em 0.25em 0 rgba(0, 0, 0, 0.25);
+  overflow: auto;
 }
 
 input {
-  width: 20em;
+  width: calc(100vw - 2em);
   height: 2em;
-  margin: 0.5em;
+  margin: 0.5em 1em;
   background: #444;
   color: #fff;
   border: 1px solid #0075d2;
-  border-radius: 0.125em;
+  border-radius: 0.25em;
   padding: 0.25em;
   box-shadow: 0.125em 0.125em 0.25em 0 rgba(0, 0, 0, 0.25);
 }
 
 input[type="button"] {
-  width: 20.5em;
-  height: 2.5em;
   background: #0075d2;
+}
+
+img {
+  width: 1em;
+  position: absolute;
+  left: 1em;
+  top: 1em;
+  z-index: 4;
 }
 </style>

@@ -1,17 +1,7 @@
 <template>
-  <Questions
-    v-bind:email="email"
-    v-bind:api="api"
-    v-bind:logout="logout"
-    v-if="log"
-  />
+  <Questions :email="email" :api="api" :logout="logout" v-if="log" />
 
-  <Login
-    v-bind:setEmail="setEmail"
-    v-bind:setApi="setApi"
-    v-bind:login="login"
-    v-else
-  />
+  <Login :setEmail="setEmail" :setApi="setApi" :login="login" v-else />
 </template>
 
 <script>
@@ -34,9 +24,10 @@ export default {
     };
   },
 
-  onCreated() {
+  created() {
     if (!navigator.onLine) {
       alert("This Application Want Internet To Work");
+      window.close();
     }
 
     const log = localStorage.getItem("log");
@@ -66,8 +57,12 @@ export default {
     },
 
     logout() {
-      localStorage.removeItem("log");
-      this.log = false;
+      const conf = confirm("Are You Sure?");
+
+      if (conf) {
+        localStorage.removeItem("log");
+        this.log = false;
+      }
     },
   },
 };
@@ -79,15 +74,23 @@ body {
   padding: 0;
 }
 
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: #000;
   color: #fff;
-  width: 100vw;
-  min-height: 100vh;
-  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   user-select: none;
 }
 

@@ -1,6 +1,6 @@
 <template>
-  <section>
-    <div>
+  <div class="filter">
+    <div class="show-filter" v-if="filter">
       <label>Topic:</label>
       <select v-model="topic">
         <option value="">All</option>
@@ -10,8 +10,6 @@
         <option value="bee">BEE/BEC</option>
         <option value="ls">Life Skill</option>
       </select>
-    </div>
-    <div>
       <label>Module:</label>
       <select v-model="module">
         <option value="">All</option>
@@ -21,15 +19,11 @@
         <option value="4">Module 4</option>
         <option value="5">Module 5</option>
       </select>
-    </div>
-    <div>
       <label>Status:</label>
       <select v-model="status">
         <option value="solved" selected>Solved</option>
         <option value="unsolved">Unsolved</option>
       </select>
-    </div>
-    <div>
       <label>Search:</label>
       <input
         type="search"
@@ -43,29 +37,33 @@
         @click="fetchQuestions"
         value="search"
       />
-    </div>
-    <div>
-      <input type="button" class="ask" @click="ask" value="Ask New Question" />
-      <Ask
-        v-bind:setAsk="setAsk"
-        v-bind:fetchQuestions="fetchQuestions"
-        v-bind:email="email"
-        v-bind:api="api"
-        v-if="asking"
+      <input
+        type="button"
+        class="ask"
+        @click="asking = true"
+        value="Ask New Question"
       />
+
+      <div>
+        <p @click="logout">Logout</p>
+        <p @click="changing = true">Change Password</p>
+      </div>
     </div>
-    <div>
-      <p @click="logout">Logout</p>
+    <div class="control" @click="filter = !filter">
+      <img src="../assets/hide.svg" alt="Hide Filter" v-if="filter" />
+      <img src="../assets/show.svg" alt="Show Filter" v-else />
     </div>
-    <div>
-      <p @click="change">Change Password</p>
-      <ChangePass
-        v-bind:setChange="setChange"
-        v-bind:email="email"
-        v-if="changing"
-      />
-    </div>
-  </section>
+  </div>
+
+  <Ask
+    :setAsk="setAsk"
+    :fetchQuestions="fetchQuestions"
+    :email="email"
+    :api="api"
+    v-if="asking"
+  />
+
+  <ChangePass :setChange="setChange" :email="email" v-if="changing" />
 </template>
 
 <script>
@@ -96,6 +94,7 @@ export default {
       search: "",
       asking: false,
       changing: false,
+      filter: false,
     };
   },
 
@@ -113,7 +112,7 @@ export default {
     },
   },
 
-  onCreated() {
+  created() {
     this.fetchQuestions();
   },
 
@@ -137,18 +136,11 @@ export default {
           }
         }
       );
-    },
-
-    ask() {
-      this.asking = true;
+      this.filter = false;
     },
 
     setAsk() {
       this.asking = false;
-    },
-
-    change() {
-      this.changing = true;
     },
 
     setChange() {
@@ -159,32 +151,42 @@ export default {
 </script>
 
 <style scoped>
-div {
-  float: left;
-  margin: 0.5em;
+.filter {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 2;
+  background: #222;
+  box-shadow: 0.125em 0.125em 0.25em 0 rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+.show-filter {
+  margin-top: 1em;
 }
 
 input,
 select {
-  width: 15em;
+  width: calc(100vw - 2em);
   height: 2em;
-  margin: 0.5em;
+  margin: 0.5em 1em;
   background: #444;
   color: #fff;
   border: 1px solid #0075d2;
-  border-radius: 0.125em;
+  border-radius: 0.25em;
   padding: 0.25em;
   box-shadow: 0.125em 0.125em 0.25em 0 rgba(0, 0, 0, 0.25);
 }
 
 .ask {
-  width: 15em;
   background: #0075d2;
 }
 
 .search {
   width: 5em;
   height: 2em;
+  margin: 0.5em auto;
   background: #0075d2;
 }
 
@@ -196,5 +198,16 @@ p {
 
 p:hover {
   color: #fff;
+}
+
+.control {
+  width: 100vw;
+  height: 2em;
+  display: grid;
+  place-items: center;
+}
+
+img {
+  width: 1em;
 }
 </style>
