@@ -23,7 +23,7 @@
 <script>
 import Questions from "./components/Questions.vue";
 import Login from "./components/Login.vue";
-import vueTopProgress from "vue-top-progress";
+import vueTopProgress from "./components/top-progress";
 
 export default {
   name: "App",
