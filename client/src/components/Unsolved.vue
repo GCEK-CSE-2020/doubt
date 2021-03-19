@@ -1,6 +1,25 @@
 <template>
   <aside>
-    <img src="../assets/back.svg" @click="setUnsolved" alt="Go Back" />
+    <img
+      src="../assets/back.svg"
+      class="back"
+      @click="setUnsolved"
+      alt="Go Back"
+    />
+    <img
+      src="../assets/menu.svg"
+      class="menu"
+      @click="drop = !drop"
+      alt="Menu"
+    />
+    <ul class="drop" v-if="drop">
+      <li @click="deleteQuestion" v-if="details.email == email">
+        Delete Question
+      </li>
+      <li @click="subscribe" v-if="details.email != email">
+        Subscribe For Answer
+      </li>
+    </ul>
     <div class="block">
       <label class="head">{{ details.question }}</label>
       <br />
@@ -30,18 +49,6 @@
       }"
     />
     <input type="button" @click="post" value="Post Answer" />
-    <input
-      type="button"
-      @click="deleteQuestion"
-      value="Delete Question"
-      v-if="details.email == email"
-    />
-    <input
-      type="button"
-      @click="subscribe"
-      value="Subscribe For Answer"
-      v-if="details.email != email"
-    />
     <Comments
       :question="details.question"
       :email="email"
@@ -186,12 +193,40 @@ input {
   box-shadow: 0.125em 0.125em 0.25em 0 rgba(0, 0, 0, 0.25);
 }
 
-img {
+.back {
   width: 1em;
   position: absolute;
   left: 1em;
   top: 1em;
   z-index: 4;
+}
+
+.menu {
+  height: 1em;
+  position: absolute;
+  right: 1em;
+  top: 1em;
+  z-index: 4;
+}
+
+.drop {
+  position: absolute;
+  right: 1em;
+  top: 1.5em;
+  border-radius: 0.25em;
+  z-index: 4;
+  box-shadow: 0.125em 0.125em 0.25em 0 rgba(0, 0, 0, 0.25);
+}
+
+.drop li {
+  list-style-type: none;
+  background: #444;
+  border-bottom: 1px solid #0075d2;
+  padding: 1em;
+}
+
+.drop li:hover {
+  background: #222;
 }
 
 .block {

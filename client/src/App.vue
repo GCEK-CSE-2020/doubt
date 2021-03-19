@@ -1,5 +1,5 @@
 <template>
-  <vueTopProgress ref="topProgress" color="#0075d2" />
+  <TopProgressBar ref="topProgress" color="#0075d2" />
 
   <Questions
     :email="email"
@@ -23,7 +23,7 @@
 <script>
 import Questions from "./components/Questions.vue";
 import Login from "./components/Login.vue";
-import vueTopProgress from "./components/top-progress";
+import TopProgressBar from "./components/TopProgressBar";
 
 export default {
   name: "App",
@@ -31,7 +31,7 @@ export default {
   components: {
     Login,
     Questions,
-    vueTopProgress,
+    TopProgressBar,
   },
 
   data() {

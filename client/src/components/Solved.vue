@@ -1,6 +1,29 @@
 <template>
   <aside>
-    <img src="../assets/back.svg" @click="setSolved" alt="Go Back" />
+    <img
+      src="../assets/back.svg"
+      class="back"
+      @click="setSolved"
+      alt="Go Back"
+    />
+    <img
+      src="../assets/menu.svg"
+      class="menu"
+      @click="drop = !drop"
+      alt="Menu"
+    />
+    <ul class="drop" v-if="drop">
+      <li @click="deleteQuestion" v-if="details.email == email">
+        Delete Question
+      </li>
+      <li
+        @click="deleteAnswer"
+        v-if="details.email == email || details.aemail == email"
+      >
+        Delete Answer
+      </li>
+      <li @click="wrong" v-if="details.email != email">This Answer Is Wrong</li>
+    </ul>
     <div class="block">
       <label class="head">{{ details.question }}</label>
       <br />
@@ -13,24 +36,6 @@
       <span>{{ details.atime }}</span>
       <div v-html="details.answer" class="detail"></div>
     </div>
-    <input
-      type="button"
-      @click="deleteQuestion"
-      value="Delete Question"
-      v-if="details.email == email"
-    />
-    <input
-      type="button"
-      @click="deleteAnswer"
-      value="Delete Answer"
-      v-if="details.email == email || details.aemail == email"
-    />
-    <input
-      type="button"
-      @click="wrong"
-      value="This Answer Is Wrong"
-      v-if="details.email != email"
-    />
     <Comments
       :question="details.question"
       :email="email"
@@ -59,6 +64,12 @@ export default {
 
   components: {
     Comments,
+  },
+
+  data() {
+    return {
+      drop: false,
+    };
   },
 
   methods: {
@@ -168,12 +179,40 @@ input {
   box-shadow: 0.125em 0.125em 0.25em 0 rgba(0, 0, 0, 0.25);
 }
 
-img {
+.back {
   width: 1em;
   position: absolute;
   left: 1em;
   top: 1em;
   z-index: 4;
+}
+
+.menu {
+  height: 1em;
+  position: absolute;
+  right: 1em;
+  top: 1em;
+  z-index: 4;
+}
+
+.drop {
+  position: absolute;
+  right: 1em;
+  top: 1.5em;
+  border-radius: 0.25em;
+  z-index: 4;
+  box-shadow: 0.125em 0.125em 0.25em 0 rgba(0, 0, 0, 0.25);
+}
+
+.drop li {
+  list-style-type: none;
+  background: #444;
+  border-bottom: 1px solid #0075d2;
+  padding: 1em;
+}
+
+.drop li:hover {
+  background: #222;
 }
 
 .block {
