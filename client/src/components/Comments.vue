@@ -49,7 +49,7 @@ export default {
         {
           question: this.question,
           email: this.email,
-          api: this.api,
+          pass: this.api,
         },
         (json) => {
           this.endProgress();
@@ -70,7 +70,7 @@ export default {
           {
             question: this.question,
             email: this.email,
-            api: this.api,
+            pass: this.api,
             comment: this.comment,
           },
           (json) => {

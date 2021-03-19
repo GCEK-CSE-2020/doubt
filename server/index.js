@@ -333,7 +333,12 @@ app.post("/delete", async (req, res) => {
             if (err) {
               res.send({ status: "false" });
             } else {
-              res.send({ status: "true" });
+              comments.deleteOne({ question: req.body.question }, (err, item) => {
+                if (err) {
+                  res.send({ status: "false" });
+                } else {
+                  res.send({ status: "true" });
+                }
             }
           });
         }
@@ -413,41 +418,6 @@ app.post("/add_comment", async (req, res) => {
               }
             );
           }
-        }
-      });
-    } else {
-      res.status(404).send({ status: "false" });
-    }
-  });
-});
-
-app.post("/delete_comment", async (req, res) => {
-  users.findOne({ email: req.body.email }, (err, item) => {
-    if (req.body.pass == item.pass) {
-      comments.findOne({ question: req.body.question }, (err, item) => {
-        if (err) {
-          res.send({ status: "false" });
-        } else {
-          const func = (comments, comment) => {
-            comments.splice(comments.indexOf(comment), 1);
-            return comments;
-          };
-
-          comments.updateOne(
-            { question: req.body.question },
-            {
-              $set: {
-                comments: func(item.comments, req.body.comment),
-              },
-            },
-            (err, item) => {
-              if (err) {
-                res.send({ status: "false" });
-              } else {
-                res.send({ status: "true" });
-              }
-            }
-          );
         }
       });
     } else {
