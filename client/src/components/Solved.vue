@@ -66,6 +66,7 @@ export default {
       const conf = confirm("Are You Sure?");
 
       if (conf) {
+        this.startProgress();
         fetchData(
           "delete",
           {
@@ -74,6 +75,7 @@ export default {
             pass: this.api,
           },
           (json) => {
+            this.endProgress();
             if (json.status == "true") {
               document.querySelector(".search").click();
               alert("Successfully Deleted");
@@ -90,6 +92,7 @@ export default {
       const conf = confirm("Are You Sure?");
 
       if (conf) {
+        this.startProgress();
         fetchData(
           "delete_answer",
           {
@@ -98,6 +101,7 @@ export default {
             pass: this.api,
           },
           (json) => {
+            this.endProgress();
             if (json.status == "true") {
               document.querySelector(".search").click();
               alert("Successfully Deleted");
@@ -114,6 +118,7 @@ export default {
       const conf = confirm("Are You Sure?");
 
       if (conf) {
+        this.startProgress();
         fetchData(
           "wrong",
           {
@@ -122,6 +127,7 @@ export default {
             pass: this.api,
           },
           (json) => {
+            this.endProgress();
             if (json.status == "true") {
               alert("Successfully Informed to Responsible Team");
               this.setSolved();

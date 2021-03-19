@@ -44,6 +44,7 @@ export default {
       const conf = confirm("Are You Sure?");
 
       if (conf) {
+        this.startProgress();
         fetchData(
           "change",
           {
@@ -52,6 +53,7 @@ export default {
             newPass: this.newPass,
           },
           (json) => {
+            this.endProgress();
             if (json.status == "true") {
               let log = JSON.parse(localStorage.getItem("log"));
               log.api = json.newPass;

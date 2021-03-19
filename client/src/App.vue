@@ -10,14 +10,7 @@
     v-if="log"
   />
 
-  <Login
-    :setEmail="setEmail"
-    :setApi="setApi"
-    :login="login"
-    :startProgress="startProgress"
-    :endProgress="endProgress"
-    v-else
-  />
+  <Login :setEmail="setEmail" :setApi="setApi" :login="login" v-else />
 </template>
 
 <script>

@@ -82,6 +82,7 @@ export default {
   methods: {
     ask() {
       if (this.question && this.description) {
+        this.startProgress();
         fetchData(
           "set",
           {
@@ -94,6 +95,7 @@ export default {
             pass: this.api,
           },
           (json) => {
+            this.endProgress();
             if (json.status == "true") {
               this.fetchQuestions();
               this.setAsk();

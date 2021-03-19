@@ -46,6 +46,8 @@ export default {
       const email = this.email.toLowerCase().trim();
 
       if (email && this.pass) {
+        this.startProgress();
+
         fetchData(
           "check",
           {
@@ -61,6 +63,8 @@ export default {
 
     func(json) {
       const email = this.email.trim().toLowerCase();
+
+      this.endProgress();
 
       if (json.status == "true") {
         this.setEmail(email);

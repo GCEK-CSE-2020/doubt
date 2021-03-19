@@ -43,6 +43,7 @@ export default {
 
   methods: {
     fetchComments() {
+      this.startProgress();
       fetchData(
         "get_comments",
         {
@@ -51,6 +52,7 @@ export default {
           api: this.api,
         },
         (json) => {
+          this.endProgress();
           if (json.status == true) {
             this.comments = json.comments;
           } else {
@@ -62,6 +64,7 @@ export default {
 
     addComment() {
       if (this.comment) {
+        this.startProgress();
         fetchData(
           "add_comment",
           {
@@ -71,6 +74,7 @@ export default {
             comment: this.comment,
           },
           (json) => {
+            this.endProgress();
             if (json.status == "true") {
               this.fetchComments();
             } else if (json.status == "check") {

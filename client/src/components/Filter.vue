@@ -128,6 +128,8 @@ export default {
 
   methods: {
     fetchQuestions() {
+      this.startProgress();
+
       fetchData(
         "get",
         {
@@ -139,6 +141,7 @@ export default {
           pass: this.api,
         },
         (json) => {
+          this.endProgress();
           if (json.status) {
             alert("Something Went Wrong");
           } else {
