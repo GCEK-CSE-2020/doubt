@@ -8,10 +8,9 @@
       title="Type Your Comment Here"
     />
     <input type="button" @click="addComment" value="Add" />
-    <div v-for="(comment, index) in comments" :key="index">
-      <span>=> </span>
+    <div class="one-comment" v-for="(comment, index) in comments" :key="index">
+      <img src="../assets/comment.svg" alt="Comment" />
       <p>{{ comment }}</p>
-      <br />
     </div>
   </div>
 </template>
@@ -98,15 +97,22 @@ export default {
   word-wrap: break-word;
 }
 
+.one-comment {
+  width: calc(100vw - 3em);
+  text-align: left;
+  margin: 0 1em;
+}
+
 label {
+  font-size: 1.2em;
   color: #0075d2;
   font-weight: bold;
   text-align: center;
-  margin-top: 1em;
+  margin: 1em 0;
 }
 
 input {
-  width: calc(100vw - 2em);
+  width: calc(100vw - 8em);
   height: 2em;
   margin: 0.5em 1em;
   background: #444;
@@ -120,13 +126,13 @@ input {
 input[type="button"] {
   width: 5em;
   height: 2em;
-  margin: 0.5em auto;
+  margin: 0.5em 1em 0.5em 0;
   background: #0075d2;
 }
 
-span {
-  font-size: 0.75em;
-  color: #999;
+img {
+  width: 0.5em;
+  margin: 0.5em 0.5em 0.5em 0;
   float: left;
 }
 </style>

@@ -126,7 +126,7 @@ export default {
     },
   },
 
-  created() {
+  onMounted() {
     this.fetchQuestions();
   },
 
