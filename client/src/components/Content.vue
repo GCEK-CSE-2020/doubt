@@ -15,8 +15,12 @@
       <span>{{ details.time }}</span>
       <div v-html="details.description"></div>
     </div>
+    <img
+      src="../assets/change-filter.svg"
+      alt="Try Changing Filter"
+      v-if="!data.length"
+    />
   </div>
-
   <Solved
     :setSolved="setSolved"
     :details="current"
@@ -125,5 +129,11 @@ span {
 
 .block div {
   text-align: left;
+}
+
+img {
+  width: 95%;
+  max-width: 25em;
+  margin: 1em auto;
 }
 </style>

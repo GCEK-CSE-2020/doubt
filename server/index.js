@@ -151,7 +151,7 @@ app.post("/set", async (req, res) => {
           if (err) {
             res.send({ status: "false" });
           } else {
-            if (items == []) {
+            if (items.length) {
               res.send({ status: "check" });
             } else {
               questions.insertOne(
