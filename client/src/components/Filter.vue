@@ -1,6 +1,6 @@
 <template>
   <div class="filter">
-    <div class="show-filter" v-if="filter">
+    <div class="show-filter" v-hide="filter">
       <label>Topic:</label>
       <select v-model="topic">
         <option value="">All</option>

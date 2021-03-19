@@ -13,6 +13,7 @@ const client = new MongoClient(
 );
 let questions;
 let data;
+let comments;
 let users;
 let transporter;
 
@@ -23,6 +24,7 @@ async function run() {
     let db = await client.db("cluster0");
     questions = await db.collection("questions");
     data = await db.collection("data");
+    comments = await db.collection("comments");
     users = await db.collection("users");
     await questions.createIndex({ question: "text", description: "text" });
 
@@ -113,13 +115,16 @@ app.post("/get", async (req, res) => {
       if (req.body.quest) {
         data["$text"] = {};
         data["$text"]["$search"] = req.body.quest;
-        questions.find(data).toArray((err, items) => {
-          if (err) {
-            res.send({ status: false });
-          } else {
-            res.send(items);
-          }
-        });
+        questions
+          .find(data)
+          .sort({ _id: req.body.status == "unsolved" ? 1 : -1 })
+          .toArray((err, items) => {
+            if (err) {
+              res.send({ status: false });
+            } else {
+              res.send(items);
+            }
+          });
       } else {
         questions.find(data).toArray((err, items) => {
           if (err) {
@@ -175,7 +180,19 @@ app.post("/set", async (req, res) => {
                         if (err) {
                           res.send({ status: "false" });
                         } else {
-                          res.send({ status: "true" });
+                          comments.insertOne(
+                            {
+                              question: req.body.question,
+                              comments: [],
+                            },
+                            (err, result) => {
+                              if (err) {
+                                res.send({ status: "false" });
+                              } else {
+                                res.send({ status: "true" });
+                              }
+                            }
+                          );
                         }
                       }
                     );
@@ -348,6 +365,91 @@ app.post("/delete_answer", async (req, res) => {
           }
         }
       );
+    } else {
+      res.status(404).send({ status: "false" });
+    }
+  });
+});
+
+app.post("/get_comments", async (req, res) => {
+  users.findOne({ email: req.body.email }, (err, item) => {
+    if (req.body.pass == item.pass) {
+      comments.findOne({ question: req.body.question }, (err, item) => {
+        if (err) {
+          res.send({ status: "false" });
+        } else {
+          res.send({ status: "true", comments: item.comments });
+        }
+      });
+    } else {
+      res.status(404).send({ status: "false" });
+    }
+  });
+});
+
+app.post("/add_comment", async (req, res) => {
+  users.findOne({ email: req.body.email }, (err, item) => {
+    if (req.body.pass == item.pass) {
+      comments.findOne({ question: req.body.question }, (err, item) => {
+        if (err) {
+          res.send({ status: "false" });
+        } else {
+          if (item.comments.includes(req.body.comment)) {
+            res.send({ status: "check" });
+          } else {
+            comments.updateOne(
+              { question: req.body.question },
+              {
+                $set: {
+                  comments: [req.body.comment, ...item.comments],
+                },
+              },
+              (err, item) => {
+                if (err) {
+                  res.send({ status: "false" });
+                } else {
+                  res.send({ status: "true" });
+                }
+              }
+            );
+          }
+        }
+      });
+    } else {
+      res.status(404).send({ status: "false" });
+    }
+  });
+});
+
+app.post("/delete_comment", async (req, res) => {
+  users.findOne({ email: req.body.email }, (err, item) => {
+    if (req.body.pass == item.pass) {
+      comments.findOne({ question: req.body.question }, (err, item) => {
+        if (err) {
+          res.send({ status: "false" });
+        } else {
+          const func = (comments, comment) => {
+            comments.splice(comments.indexOf(comment), 1);
+            return comments;
+          };
+
+          comments.updateOne(
+            { question: req.body.question },
+            {
+              $set: {
+                comments: func(item.comments, req.body.comment),
+              },
+            },
+            (err, item) => {
+              if (err) {
+                res.send({ status: "false" });
+              } else {
+                res.send({ status: "true" });
+              }
+            }
+          );
+        }
+      });
     } else {
       res.status(404).send({ status: "false" });
     }
