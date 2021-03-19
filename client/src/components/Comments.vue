@@ -53,7 +53,7 @@ export default {
         },
         (json) => {
           this.endProgress();
-          if (json.status == true) {
+          if (json.status == "true") {
             this.comments = json.comments;
           } else {
             alert("server Error");
