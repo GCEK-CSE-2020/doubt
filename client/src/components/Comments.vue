@@ -98,7 +98,8 @@ export default {
 }
 
 .one-comment {
-  width: calc(100vw - 3em);
+  width: calc(100vw - 2em);
+  height: auto;
   text-align: left;
   margin: 0.5em 1em;
 }
@@ -134,9 +135,5 @@ img {
   width: 0.5em;
   margin-right: 0.5em;
   float: left;
-}
-
-.comment p {
-  margin-top: -0.5em;
 }
 </style>
