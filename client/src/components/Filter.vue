@@ -19,29 +19,33 @@
         <option value="4">Module 4</option>
         <option value="5">Module 5</option>
       </select>
+
       <label>Status:</label>
       <select v-model="status">
         <option value="solved" selected>Solved</option>
         <option value="unsolved">Unsolved</option>
       </select>
       <label>Search:</label>
-      <input
-        type="search"
-        v-model="search"
-        placeholder="Type Here To Search"
-        title="Type Here To Search"
-      />
-      <input
-        class="search"
-        type="button"
-        @click="fetchQuestions"
-        value="search"
-      />
+      <div>
+        <input
+          type="search"
+          v-model="search"
+          placeholder="Type Here To Search"
+          title="Type Here To Search"
+        />
+        <input
+          class="search"
+          type="button"
+          @click="fetchQuestions"
+          value="search"
+        />
+      </div>
+
       <input
         type="button"
         class="ask"
         @click="asking = true"
-        value="Ask New Question"
+        value="Ask A New Question"
       />
 
       <div>
@@ -196,10 +200,14 @@ select {
   background: #0075d2;
 }
 
+input[type="search"] {
+  width: calc(100vw - 8em);
+}
+
 .search {
   width: 5em;
   height: 2em;
-  margin: 0.5em auto;
+  margin: 0.5em 1em 0.5em 0;
   background: #0075d2;
 }
 
