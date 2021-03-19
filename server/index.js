@@ -333,12 +333,16 @@ app.post("/delete", async (req, res) => {
             if (err) {
               res.send({ status: "false" });
             } else {
-              comments.deleteOne({ question: req.body.question }, (err, item) => {
-                if (err) {
-                  res.send({ status: "false" });
-                } else {
-                  res.send({ status: "true" });
+              comments.deleteOne(
+                { question: req.body.question },
+                (err, item) => {
+                  if (err) {
+                    res.send({ status: "false" });
+                  } else {
+                    res.send({ status: "true" });
+                  }
                 }
+              );
             }
           });
         }
