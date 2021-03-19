@@ -105,8 +105,6 @@ input {
 }
 
 input[type="button"] {
-  width: 20.5em;
-  height: 2.5em;
   background: #0075d2;
 }
 
