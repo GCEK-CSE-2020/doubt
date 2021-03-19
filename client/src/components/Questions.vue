@@ -1,7 +1,20 @@
 <template>
-  <Filter :setData="setData" :logout="logout" :email="email" :api="api" />
+  <Filter
+    :setData="setData"
+    :logout="logout"
+    :email="email"
+    :api="api"
+    :startProgress="startProgress"
+    :endProgress="endProgress"
+  />
 
-  <Content :data="data" :email="email" :api="api" />
+  <Content
+    :data="data"
+    :email="email"
+    :api="api"
+    :startProgress="startProgress"
+    :endProgress="endProgress"
+  />
 </template>
 
 <script>
@@ -15,6 +28,8 @@ export default {
     logout: Function,
     email: String,
     api: String,
+    startProgress: Function,
+    endProgress: Function,
   },
 
   components: {

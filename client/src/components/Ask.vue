@@ -62,6 +62,8 @@ export default {
     fetchQuestions: Function,
     email: String,
     api: String,
+    startProgress: Function,
+    endProgress: Function,
   },
 
   components: {

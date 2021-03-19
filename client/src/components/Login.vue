@@ -30,6 +30,8 @@ export default {
     setEmail: Function,
     setApi: Function,
     login: Function,
+    startProgress: Function,
+    endProgress: Function,
   },
 
   data() {

@@ -22,6 +22,8 @@
     :details="current"
     :email="email"
     :api="api"
+    :startProgress="startProgress"
+    :endProgress="endProgress"
     v-if="solved"
   />
 
@@ -30,6 +32,8 @@
     :details="current"
     :email="email"
     :api="api"
+    :startProgress="startProgress"
+    :endProgress="endProgress"
     v-if="unsolved"
   />
 </template>
@@ -45,6 +49,8 @@ export default {
     data: Array,
     email: String,
     api: String,
+    startProgress: Function,
+    endProgress: Function,
   },
 
   data() {

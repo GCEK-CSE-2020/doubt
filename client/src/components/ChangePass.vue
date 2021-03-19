@@ -28,6 +28,8 @@ export default {
   props: {
     setChange: Function,
     email: String,
+    startProgress: Function,
+    endProgress: Function,
   },
 
   data() {

@@ -1,6 +1,6 @@
 <template>
   <div class="filter">
-    <div class="show-filter" v-hide="filter">
+    <div class="show-filter" v-show="filter">
       <label>Topic:</label>
       <select v-model="topic">
         <option value="">All</option>
@@ -61,9 +61,17 @@
     :email="email"
     :api="api"
     v-if="asking"
+    :startProgress="startProgress"
+    :endProgress="endProgress"
   />
 
-  <ChangePass :setChange="setChange" :email="email" v-if="changing" />
+  <ChangePass
+    :setChange="setChange"
+    :email="email"
+    :startProgress="startProgress"
+    :endProgress="endProgress"
+    v-if="changing"
+  />
 </template>
 
 <script>
@@ -84,6 +92,8 @@ export default {
     logout: Function,
     email: String,
     api: String,
+    startProgress: Function,
+    endProgress: Function,
   },
 
   data() {

@@ -1,12 +1,29 @@
 <template>
-  <Questions :email="email" :api="api" :logout="logout" v-if="log" />
+  <vueTopProgress ref="topProgress" color="#0075d2" />
 
-  <Login :setEmail="setEmail" :setApi="setApi" :login="login" v-else />
+  <Questions
+    :email="email"
+    :api="api"
+    :logout="logout"
+    :startProgress="startProgress"
+    :endProgress="endProgress"
+    v-if="log"
+  />
+
+  <Login
+    :setEmail="setEmail"
+    :setApi="setApi"
+    :login="login"
+    :startProgress="startProgress"
+    :endProgress="endProgress"
+    v-else
+  />
 </template>
 
 <script>
 import Questions from "./components/Questions.vue";
 import Login from "./components/Login.vue";
+import vueTopProgress from "vue-top-progress";
 
 export default {
   name: "App",
@@ -14,6 +31,7 @@ export default {
   components: {
     Login,
     Questions,
+    vueTopProgress,
   },
 
   data() {
@@ -62,6 +80,14 @@ export default {
         localStorage.removeItem("log");
         this.log = false;
       }
+    },
+
+    startProgress() {
+      this.$refs.topProgress.start();
+    },
+
+    endProgress() {
+      this.$refs.topProgress.done();
     },
   },
 };

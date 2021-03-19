@@ -31,11 +31,19 @@
       value="This Answer Is Wrong"
       v-if="details.email != email"
     />
+    <Comments
+      :question="details.question"
+      :email="email"
+      :api="api"
+      :startProgress="startProgress"
+      :endProgress="endProgress"
+    />
   </aside>
 </template>
 
 <script>
 import fetchData from "../scripts/fetchData";
+import Comments from "./Comments";
 
 export default {
   name: "Ask",
@@ -45,6 +53,12 @@ export default {
     details: Object,
     email: String,
     api: String,
+    startProgress: Function,
+    endProgress: Function,
+  },
+
+  components: {
+    Comments,
   },
 
   methods: {
