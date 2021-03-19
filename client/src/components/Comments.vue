@@ -36,7 +36,7 @@ export default {
     };
   },
 
-  onMounted() {
+  mounted() {
     this.fetchComments();
   },
 
@@ -100,7 +100,7 @@ export default {
 .one-comment {
   width: calc(100vw - 3em);
   text-align: left;
-  margin: 0 1em;
+  margin: 0.5em 1em;
 }
 
 label {
@@ -132,7 +132,11 @@ input[type="button"] {
 
 img {
   width: 0.5em;
-  margin: 0.5em 0.5em 0.5em 0;
+  margin-right: 0.5em;
   float: left;
+}
+
+.comment p {
+  margin-top: -0.5em;
 }
 </style>
