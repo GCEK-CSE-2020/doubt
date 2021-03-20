@@ -146,7 +146,7 @@ app.post("/get_one", async (req, res) => {
   users.findOne({ email: req.body.email }, (err, item) => {
     if (req.body.pass == item.pass) {
       questions.findOne({ question: req.body.question }, (err, item) => {
-        if (err || !item) {
+        if (err) {
           res.send({ status: "false" });
         } else {
           res.send(item);
@@ -268,9 +268,9 @@ app.post("/update", async (req, res) => {
                                 req.body.question +
                                 "\n" +
                                 "Check Your Answer Here: " +
-                                `${req.protocol}://${req.get(
+                                `https://${req.get(
                                   "host"
-                                )}?${encodeURIComponent(req.body.question)}`,
+                                )}?q=${encodeURIComponent(req.body.question)}`,
                             },
                             (err, data) => {
                               res.send({ status: "true" });

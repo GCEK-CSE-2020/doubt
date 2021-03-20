@@ -78,11 +78,12 @@ export default {
       fetchData(
         "get_one",
         {
-          question: decodeURIComponent(url[1]),
+          question: decodeURIComponent(url[1].split("=")[1]),
           email: this.email,
           pass: this.api,
         },
         (json) => {
+          console.log(json);
           if (json.status != false) {
             this.current = json;
             if (json.answer) {
