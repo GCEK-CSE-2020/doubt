@@ -141,7 +141,7 @@ export default {
   padding: 0.5em 1em;
   background: #222;
   width: calc(100vw - 2em);
-  max-width: calc(450px - 2em);
+  max-width: calc(700px - 2em);
   border: 1px solid #0075d2;
   border-radius: 0.25em;
   word-wrap: break-word;

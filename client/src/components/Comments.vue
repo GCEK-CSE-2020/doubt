@@ -1,13 +1,16 @@
 <template>
   <div class="comments">
     <label>Comments</label>
-    <input
-      type="text"
-      v-model="comment"
-      placeholder="Type Your Comment Here"
-      title="Type Your Comment Here"
-    />
-    <input type="button" @click="addComment" value="Add" />
+    <div class="comments-div">
+      <input
+        type="text"
+        v-model="comment"
+        placeholder="Type Your Comment Here"
+        title="Type Your Comment Here"
+      />
+      <input type="button" @click="addComment" value="Add" />
+    </div>
+
     <div class="one-comment" v-for="(comment, index) in comments" :key="index">
       <img src="../assets/comment.svg" alt="Comment" />
       <p>{{ comment }}</p>
@@ -112,10 +115,17 @@ label {
   margin: 1em 0;
 }
 
+.comments-div {
+  width: calc(100vw - 2em);
+  max-width: calc(450px - 2em);
+  margin: 0.5em auto;
+}
+
 input {
   width: calc(100vw - 8em);
+  max-width: calc(450px - 8em);
   height: 2em;
-  margin: 0.5em 1em;
+  margin: none;
   background: #444;
   color: #fff;
   border: 1px solid #0075d2;
@@ -127,7 +137,7 @@ input {
 input[type="button"] {
   width: 5em;
   height: 2em;
-  margin: 0.5em 1em 0.5em 0;
+  margin: 0 1em 0 0;
   background: #0075d2;
 }
 

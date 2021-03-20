@@ -183,6 +183,7 @@ export default {
 }
 
 .show-filter {
+  display: grid;
   margin-top: 1em;
 }
 

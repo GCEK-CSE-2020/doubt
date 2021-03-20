@@ -122,6 +122,7 @@ export default {
 
 <style scoped>
 aside {
+  display: grid;
   position: absolute;
   top: 0;
   left: 0;
