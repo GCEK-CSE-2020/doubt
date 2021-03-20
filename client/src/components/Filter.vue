@@ -182,11 +182,11 @@ export default {
   text-align: center;
 }
 
- {
+.show-filter {
   margin-top: 1em;
 }
 
-.show-filter * {
+.show-filter > * {
   display: block;
 }
 
