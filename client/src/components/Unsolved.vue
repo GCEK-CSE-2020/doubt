@@ -32,7 +32,7 @@
       v-model="answer"
       placeholder="Describe Your Answer Here"
       title="Describe Your Answer Here"
-      api-key="no-api-key"
+      api-key="3o38mbryyt3pos71f5rbt260nslesc2xzztmcp9cdzk33tku"
       :init="{
         menubar: false,
         branding: false,

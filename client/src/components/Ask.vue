@@ -36,7 +36,7 @@
       v-model="description"
       placeholder="Describe Your Question Here"
       title="Describe Your Question Here"
-      api-key="no-api-key"
+      api-key="3o38mbryyt3pos71f5rbt260nslesc2xzztmcp9cdzk33tku"
       :init="{
         menubar: false,
         branding: false,
