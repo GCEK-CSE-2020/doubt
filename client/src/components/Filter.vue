@@ -2,9 +2,9 @@
   <div class="filter">
     <div class="show-filter" v-show="filter">
       <label>Topic:</label>
-      <select v-model="topic">
+      <select v-model="topic" title="Select Your Topic">
         <option value="">All</option>
-        <option value="common" selected>Common</option>
+        <option value="common">Common</option>
         <option value="lac">Linear Algebra And Calculus</option>
         <option value="ec">Engineering Chemistry</option>
         <option value="eg">Engineering Graphics</option>
@@ -12,17 +12,21 @@
         <option value="ls">Life Skill</option>
       </select>
       <label v-show="topic != 'common'">Module:</label>
-      <select v-model="module" v-show="topic != 'common'">
+      <select
+        v-model="module"
+        title="Select Your Module"
+        v-show="topic != 'common'"
+      >
         <option value="">All</option>
-        <option value="1" selected>Module 1</option>
+        <option value="1">Module 1</option>
         <option value="2">Module 2</option>
         <option value="3">Module 3</option>
         <option value="4">Module 4</option>
         <option value="5">Module 5</option>
       </select>
       <label>Status:</label>
-      <select v-model="status">
-        <option value="solved" selected>Solved</option>
+      <select v-model="status" title="Select Question Status">
+        <option value="solved">Solved</option>
         <option value="unsolved">Unsolved</option>
         <option value="">Your Questions</option>
       </select>
@@ -102,7 +106,7 @@ export default {
 
   data() {
     return {
-      topic: "lac",
+      topic: "common",
       module: "1",
       status: "solved",
       search: "",
