@@ -13,6 +13,7 @@
       alt="Menu"
     />
     <ul class="drop" v-if="drop">
+      <li @click="share" v-if="navigator.share">Share</li>
       <li @click="deleteQuestion" v-if="details.email == email">
         Delete Question
       </li>
@@ -162,6 +163,16 @@ export default {
           }
         }
       );
+    },
+
+    share() {
+      navigator.share({
+        title: "GCEK CSE 2020 FORUM",
+        text: this.details.question, // Change Share Text Here
+        url:
+          "https://gcekcse2020.herokuapp.com/?q=" +
+          encodeURIComponent(this.details.question), // Change URL Here
+      });
     },
   },
 };
