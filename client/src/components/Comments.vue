@@ -101,6 +101,7 @@ export default {
 }
 
 .one-comment {
+  width: calc(100vw - 2em);
   max-width: calc(450px - 2em);
   margin: 0.5em auto;
   height: auto;
