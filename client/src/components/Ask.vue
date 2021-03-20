@@ -122,7 +122,6 @@ export default {
 
 <style scoped>
 aside {
-  display: grid;
   position: absolute;
   top: 0;
   left: 0;
@@ -133,6 +132,10 @@ aside {
   text-align: center;
   background: #000;
   overflow: auto;
+}
+
+aside > * {
+  display: block;
 }
 
 input,
