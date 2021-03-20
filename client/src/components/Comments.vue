@@ -1,7 +1,7 @@
 <template>
   <div class="comments">
     <label>Comments</label>
-    <div class="comments-div">
+    <div>
       <input
         type="text"
         v-model="comment"
@@ -115,16 +115,6 @@ label {
   margin: 1em 0;
 }
 
-.comments-div {
-  width: calc(100vw - 2em);
-  max-width: calc(450px - 2em);
-  margin: 0.5em auto;
-}
-
-.comments-div > * {
-  display: inline-block;
-}
-
 input {
   width: calc(100vw - 8em);
   max-width: calc(450px - 8em);
@@ -141,7 +131,7 @@ input {
 input[type="button"] {
   width: 5em;
   height: 2em;
-  margin: 0 1em 0 0;
+  margin: 0 0 0 1em;
   background: #0075d2;
 }
 
