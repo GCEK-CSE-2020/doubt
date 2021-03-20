@@ -3,14 +3,16 @@
     <img src="../assets/back.svg" @click="setAsk" alt="Go Back" />
     <label>Topic:</label>
     <select v-model="topic">
-      <option value="lac" selected>Linear Algebra And Calculus</option>
+      <option value="common" selected>Common</option>
+      <option value="lac">Linear Algebra And Calculus</option>
       <option value="ec">Engineering Chemistry</option>
       <option value="eg">Engineering Graphics</option>
       <option value="bee">BEE/BEC</option>
       <option value="ls">Life Skill</option>
     </select>
-    <label>Module:</label>
-    <select v-model="module">
+    <label v-show="topic != 'common'">Module:</label>
+    <select v-model="module" v-show="topic != 'common'">
+      <option value="">All</option>
       <option value="1" selected>Module 1</option>
       <option value="2">Module 2</option>
       <option value="3">Module 3</option>

@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import fetchData from "../scripts/fetchData";
 import Solved from "./Solved";
 import Unsolved from "./Unsolved";
 
@@ -68,6 +69,31 @@ export default {
   components: {
     Solved,
     Unsolved,
+  },
+
+  onMounted() {
+    const url = window.location.href.split("?");
+
+    if (url.length == 2) {
+      fetchData(
+        "get_one",
+        {
+          question: decodeURIComponent(url[1]),
+          email: this.email,
+          pass: this.api,
+        },
+        (json) => {
+          if (json.status != false) {
+            this.current = json;
+            if (json.answer) {
+              this.solved = true;
+            } else {
+              this.unsolved = true;
+            }
+          }
+        }
+      );
+    }
   },
 
   methods: {

@@ -102,13 +102,15 @@ app.post("/get", async (req, res) => {
 
       if (req.body.status) {
         data.status = req.body.status;
+      } else {
+        data.email = req.body.email;
       }
 
       if (req.body.topic) {
         data.topic = req.body.topic;
       }
 
-      if (req.body.module) {
+      if (req.body.module && req.body.topic != "common") {
         data.module = req.body.module;
       }
 
@@ -134,6 +136,22 @@ app.post("/get", async (req, res) => {
           }
         });
       }
+    } else {
+      res.status(404).send({ status: "false" });
+    }
+  });
+});
+
+app.post("/get_one", async (req, res) => {
+  users.findOne({ email: req.body.email }, (err, item) => {
+    if (req.body.pass == item.pass) {
+      questions.findOne({ question: req.body.question }, (err, item) => {
+        if (err || !item) {
+          res.send({ status: "false" });
+        } else {
+          res.send(item);
+        }
+      });
     } else {
       res.status(404).send({ status: "false" });
     }
@@ -246,11 +264,13 @@ app.post("/update", async (req, res) => {
                               to: email,
                               subject: "Your Doubt Is Solved",
                               text:
-                                "Questions: " +
+                                "Question: " +
                                 req.body.question +
                                 "\n" +
-                                "Answer: " +
-                                req.body.answer,
+                                "Check Your Answer Here: " +
+                                `${req.protocol}://${req.get(
+                                  "host"
+                                )}?${encodeURIComponent(req.body.question)}`,
                             },
                             (err, data) => {
                               res.send({ status: "true" });
