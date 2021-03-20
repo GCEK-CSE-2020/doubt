@@ -242,6 +242,7 @@ p:hover {
 }
 
 .control {
+  cursor: pointer;
   width: 100vw;
   height: 2em;
   display: grid;
