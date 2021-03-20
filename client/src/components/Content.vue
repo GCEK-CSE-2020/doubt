@@ -71,10 +71,12 @@ export default {
     Unsolved,
   },
 
-  onMounted() {
+  mounted() {
     const url = window.location.href.split("?");
 
     if (url.length == 2) {
+      this.startProgress();
+
       fetchData(
         "get_one",
         {
@@ -83,7 +85,7 @@ export default {
           pass: this.api,
         },
         (json) => {
-          console.log(json);
+          this.endProgress();
           if (json.status != false) {
             this.current = json;
             if (json.answer) {

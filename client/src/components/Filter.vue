@@ -133,7 +133,6 @@ export default {
   methods: {
     fetchQuestions() {
       this.startProgress();
-
       fetchData(
         "get",
         {
