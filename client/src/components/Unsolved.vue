@@ -85,6 +85,7 @@ export default {
   data() {
     return {
       answer: "",
+      drop: false,
     };
   },
 
