@@ -87,8 +87,9 @@ aside {
 
 input {
   width: calc(100vw - 2em);
+  max-width: calc(450px - 2em);
   height: 2em;
-  margin: 0.5em 1em;
+  margin: 0.5em auto;
   background: #444;
   color: #fff;
   border: 1px solid #0075d2;
@@ -107,5 +108,13 @@ img {
   left: 1em;
   top: 1em;
   z-index: 4;
+}
+
+@media screen and (min-width: 450px) {
+  img {
+    position: absolute;
+    left: calc(50vw - (225px - 1em));
+    top: 1em;
+  }
 }
 </style>

@@ -31,7 +31,7 @@
         <option value="">Your Questions</option>
       </select>
       <label>Search:</label>
-      <div>
+      <div class="search-div">
         <input
           type="search"
           v-model="search"
@@ -189,8 +189,9 @@ export default {
 input,
 select {
   width: calc(100vw - 2em);
+  max-width: calc(450px - 2em);
   height: 2em;
-  margin: 0.5em 1em;
+  margin: 0.5em auto;
   background: #444;
   color: #fff;
   border: 1px solid #0075d2;
@@ -203,14 +204,22 @@ select {
   background: #0075d2;
 }
 
+.search-div {
+  width: calc(100vw - 2em);
+  max-width: calc(450px - 2em);
+  margin: 0.5em auto;
+}
+
 input[type="search"] {
   width: calc(100vw - 8em);
+  margin: none;
+  max-width: calc(450px - 8em);
 }
 
 .search {
   width: 5em;
   height: 2em;
-  margin: 0.5em 1em 0.5em 0;
+  margin: 0 1em 0 0;
   background: #0075d2;
 }
 

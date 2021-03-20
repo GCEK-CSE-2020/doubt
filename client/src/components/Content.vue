@@ -16,6 +16,7 @@
       <div v-html="details.description"></div>
     </div>
     <img
+      class="none"
       src="../assets/change-filter.svg"
       alt="Try Changing Filter"
       v-if="!data.length"
@@ -136,10 +137,11 @@ export default {
 
 .block {
   cursor: pointer;
-  margin: 1em;
+  margin: 1em auto;
   padding: 0.5em 1em;
   background: #222;
   width: calc(100vw - 2em);
+  max-width: calc(450px - 2em);
   border: 1px solid #0075d2;
   border-radius: 0.25em;
   word-wrap: break-word;
@@ -160,7 +162,7 @@ span {
   text-align: left;
 }
 
-img {
+.none {
   width: 95%;
   max-width: 25em;
   margin: 1em auto;
