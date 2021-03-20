@@ -157,6 +157,7 @@ input[type="button"] {
 }
 
 img {
+  cursor: pointer;
   width: 1em;
   position: absolute;
   left: 1em;

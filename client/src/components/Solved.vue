@@ -202,6 +202,7 @@ input {
 }
 
 .back {
+  cursor: pointer;
   width: 1em;
   position: absolute;
   left: 1em;
@@ -210,6 +211,7 @@ input {
 }
 
 .menu {
+  cursor: pointer;
   height: 1em;
   position: absolute;
   right: 1em;
@@ -227,6 +229,7 @@ input {
 }
 
 .drop li {
+  cursor: pointer;
   list-style-type: none;
   background: #444;
   border-bottom: 1px solid #0075d2;
@@ -238,7 +241,6 @@ input {
 }
 
 .block {
-  cursor: pointer;
   margin: 1em auto;
   padding: 0.5em 1em;
   background: #222;
