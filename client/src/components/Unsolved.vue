@@ -254,10 +254,11 @@ input {
 
 .block {
   cursor: pointer;
-  margin: 1em;
+  margin: 1em auto;
   padding: 0.5em 1em;
   background: #222;
   width: calc(100vw - 2em);
+  max-width: calc(450px - 2em);
   border: 1px solid #0075d2;
   border-radius: 0.25em;
   word-wrap: break-word;
@@ -289,6 +290,12 @@ span {
     position: absolute;
     right: calc(50vw - (225px - 1em));
     top: 1em;
+  }
+
+  .drop {
+    position: absolute;
+    right: calc(50vw - (225px - 1em));
+    top: 1.5em;
   }
 }
 </style>

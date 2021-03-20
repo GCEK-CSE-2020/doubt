@@ -276,5 +276,11 @@ span {
     right: calc(50vw - (225px - 1em));
     top: 1em;
   }
+
+  .drop {
+    position: absolute;
+    right: calc(50vw - (225px - 1em));
+    top: 1.5em;
+  }
 }
 </style>

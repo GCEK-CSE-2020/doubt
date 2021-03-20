@@ -122,6 +122,7 @@ label {
 }
 
 input {
+  float: left;
   width: calc(100vw - 8em);
   max-width: calc(450px - 8em);
   height: 2em;
