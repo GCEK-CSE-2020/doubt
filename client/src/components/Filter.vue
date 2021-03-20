@@ -214,9 +214,12 @@ select {
   margin: 0.5em auto;
 }
 
+.search-div > * {
+  display: inline-block;
+}
+
 input[type="search"] {
   width: calc(100vw - 8em);
-  float: left;
   margin: none;
   max-width: calc(450px - 8em);
 }

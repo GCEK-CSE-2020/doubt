@@ -121,8 +121,11 @@ label {
   margin: 0.5em auto;
 }
 
+.comments-div > * {
+  display: inline-block;
+}
+
 input {
-  float: left;
   width: calc(100vw - 8em);
   max-width: calc(450px - 8em);
   height: 2em;
