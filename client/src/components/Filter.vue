@@ -11,7 +11,7 @@
         <option value="bee">BEE/BEC</option>
         <option value="ls">Life Skill</option>
       </select>
-      <label v-show="topic != 'common'">Module:</label>
+      <label v-show="topic != 'common' && topic != ''">Module:</label>
       <select
         v-model="module"
         title="Select Your Module"

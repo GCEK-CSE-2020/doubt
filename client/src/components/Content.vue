@@ -12,7 +12,7 @@
     >
       <label class="head">{{ details.question }}</label>
       <br />
-      <span>{{ new Date(details.time) }}</span>
+      <span>{{ new Date(details.time).toString() }}</span>
       <div v-html="details.description"></div>
     </div>
     <img

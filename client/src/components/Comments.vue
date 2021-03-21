@@ -90,7 +90,7 @@ label {
   color: #0075d2;
   font-weight: bold;
   text-align: center;
-  margin: 1em 0;
+  margin: 1em 0 2em 0;
 }
 
 input {
