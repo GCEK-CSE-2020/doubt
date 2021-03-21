@@ -104,9 +104,8 @@ app.post("/get", async (req, res) => {
         if (req.body.status == "email") {
           data.email = req.body.email;
         } else {
-          ata.status = req.body.status;
+          data.status = req.body.status;
         }
-        d;
       }
 
       if (req.body.topic) {
