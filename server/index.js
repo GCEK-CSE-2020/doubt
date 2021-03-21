@@ -112,7 +112,7 @@ app.post("/get", async (req, res) => {
         data.topic = req.body.topic;
       }
 
-      if (req.body.module && req.body.topic != "common") {
+      if (req.body.module && req.body.topic && req.body.topic != "common") {
         data.module = req.body.module;
       }
 
@@ -174,7 +174,7 @@ app.post("/get_details", async (req, res) => {
         if (err) {
           res.send({ status: "false" });
         } else {
-          res.send(item);
+          res.send({ ...item });
         }
       });
     } else {
@@ -201,6 +201,9 @@ app.post("/set", async (req, res) => {
                 {
                   question: req.body.question,
                   description: req.body.description,
+                  status: "unsolved",
+                  topic: req.body.topic,
+                  module: req.body.module,
                   time: req.body.time,
                 },
                 (err, result) => {
@@ -219,9 +222,6 @@ app.post("/set", async (req, res) => {
                           details.insertOne(
                             {
                               question: req.body.question,
-                              status: "unsolved",
-                              topic: req.body.topic,
-                              module: req.body.module,
                               email: req.body.email,
                               answer: "",
                               atime: "",
@@ -254,63 +254,73 @@ app.post("/set", async (req, res) => {
 app.post("/update", async (req, res) => {
   users.findOne({ email: req.body.aemail }, (err, item) => {
     if (req.body.pass == item.pass) {
-      questions.findOne(
-        {
-          question: req.body.question,
-        },
-        (err, item) => {
-          if (err) {
-            res.send({ status: "false" });
+      details.findOne({ question: req.body.question }, (err, item) => {
+        if (err) {
+          res.send({ status: "false" });
+        } else {
+          if (item.answer) {
+            res.send({ status: "check" });
           } else {
-            if (item.answer) {
-              res.send({ status: "check" });
-            } else {
-              details.updateOne(
-                { question: req.body.question },
-                {
-                  $set: {
-                    answer: req.body.answer,
-                    atime: req.body.atime,
-                    aemail: req.body.aemail,
-                    status: "solved",
-                  },
+            details.updateOne(
+              { question: req.body.question },
+              {
+                $set: {
+                  answer: req.body.answer,
+                  atime: req.body.atime,
+                  aemail: req.body.aemail,
                 },
-                (err, item) => {
-                  if (err) {
-                    res.send({ status: "false" });
-                  } else {
-                    subscribe.findOne(
-                      { question: req.body.question },
-                      (err, item) => {
-                        item.email.forEach((email) => {
-                          transporter.sendMail(
-                            {
-                              from: "gcekcse2020@gmail.com",
-                              to: email,
-                              subject: "Your Doubt Is Solved",
-                              text:
-                                "Question: " +
-                                req.body.question +
-                                "\n" +
-                                "Check Your Answer Here: " +
-                                `https://${req.get(
-                                  "host"
-                                )}?q=${encodeURIComponent(req.body.question)}`,
-                            },
-                            (err, data) => {
-                              res.send({ status: "true" });
-                            }
-                          );
-                        });
+              },
+              (err, item) => {
+                if (err) {
+                  res.send({ status: "false" });
+                } else {
+                  questions.updateOne(
+                    { question: req.body.question },
+                    {
+                      $set: {
+                        status: "solved",
+                      },
+                    },
+                    (err, item) => {
+                      if (err) {
+                        res.send({ status: "false" });
+                      } else {
+                        subscribe.findOne(
+                          { question: req.body.question },
+                          (err, item) => {
+                            item.email.forEach((email) => {
+                              transporter.sendMail(
+                                {
+                                  from: "gcekcse2020@gmail.com",
+                                  to: email,
+                                  subject: "Your Doubt Is Solved",
+                                  text:
+                                    "Question: " +
+                                    req.body.question +
+                                    "\n" +
+                                    "Check Your Answer Here: " +
+                                    `https://${req.get(
+                                      "host"
+                                    )}?q=${encodeURIComponent(
+                                      req.body.question
+                                    )}`,
+                                },
+                                (err, data) => {
+                                  res.send({ status: "true" });
+                                }
+                              );
+                            });
+                          }
+                        );
                       }
-                    );
-                  }
+                    }
+                  );
                 }
-              );
-            }
+              }
+            );
           }
         }
-      );
+      });
     } else {
       res.status(404).send({ status: "false" });
     }

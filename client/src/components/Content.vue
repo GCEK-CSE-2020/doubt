@@ -27,6 +27,7 @@
     :details="current"
     :email="email"
     :api="api"
+    :fetchComments="fetchDetails"
     :startProgress="startProgress"
     :endProgress="endProgress"
     v-if="solved"

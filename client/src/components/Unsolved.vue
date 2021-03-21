@@ -55,6 +55,7 @@
       :comments="details.comments"
       :email="email"
       :api="api"
+      :fetchComments="fetchComments"
       :startProgress="startProgress"
       :endProgress="endProgress"
     />
@@ -74,6 +75,7 @@ export default {
     details: Object,
     email: String,
     api: String,
+    fetchComments: Function,
     startProgress: Function,
     endProgress: Function,
   },
