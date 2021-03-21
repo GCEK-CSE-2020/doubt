@@ -24,7 +24,7 @@
     <div class="block">
       <label class="head">{{ details.question }}</label>
       <br />
-      <span>{{ details.time }}</span>
+      <span>{{ new Date(details.time) }}</span>
       <div v-html="details.description"></div>
     </div>
     <label>Your Answer:</label>
@@ -52,6 +52,7 @@
     <input type="button" @click="post" value="Post Answer" />
     <Comments
       :question="details.question"
+      :comments="details.comments"
       :email="email"
       :api="api"
       :startProgress="startProgress"
@@ -140,7 +141,7 @@ export default {
           {
             question: this.details.question,
             answer: this.answer,
-            atime: new Date().toString(),
+            atime: new Date().getTime(),
             aemail: this.email,
             pass: this.api,
           },

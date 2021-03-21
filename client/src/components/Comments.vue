@@ -26,44 +26,21 @@ export default {
 
   props: {
     question: String,
+    comments: Array,
     email: String,
     api: String,
     startProgress: Function,
     endProgress: Function,
+    fetchComments: Function,
   },
 
   data() {
     return {
-      comments: [],
       comment: "",
     };
   },
 
-  mounted() {
-    this.fetchComments();
-  },
-
   methods: {
-    fetchComments() {
-      this.startProgress();
-      fetchData(
-        "get_comments",
-        {
-          question: this.question,
-          email: this.email,
-          pass: this.api,
-        },
-        (json) => {
-          this.endProgress();
-          if (json.status == "true") {
-            this.comments = json.comments;
-          } else {
-            alert("server Error");
-          }
-        }
-      );
-    },
-
     addComment() {
       if (this.comment) {
         this.startProgress();

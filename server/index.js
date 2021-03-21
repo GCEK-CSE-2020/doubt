@@ -12,8 +12,8 @@ const client = new MongoClient(
   { useUnifiedTopology: true }
 );
 let questions;
-let data;
-let comments;
+let details;
+let subscribe;
 let users;
 let transporter;
 
@@ -23,8 +23,8 @@ async function run() {
 
     let db = await client.db("cluster0");
     questions = await db.collection("questions");
-    data = await db.collection("data");
-    comments = await db.collection("comments");
+    details = await db.collection("details");
+    subscribe = await db.collection("subscribe");
     users = await db.collection("users");
     await questions.createIndex({ question: "text", description: "text" });
 
@@ -101,9 +101,12 @@ app.post("/get", async (req, res) => {
       let data = {};
 
       if (req.body.status) {
-        data.status = req.body.status;
-      } else {
-        data.email = req.body.email;
+        if (req.body.status == "email") {
+          data.email = req.body.email;
+        } else {
+          ata.status = req.body.status;
+        }
+        d;
       }
 
       if (req.body.topic) {
@@ -119,7 +122,7 @@ app.post("/get", async (req, res) => {
         data["$text"]["$search"] = req.body.quest;
         questions
           .find(data)
-          .sort({ _id: req.body.status == "unsolved" ? 1 : -1 })
+          .sort({ time: req.body.status == "unsolved" ? 1 : -1 })
           .toArray((err, items) => {
             if (err) {
               res.send({ status: false });
@@ -145,7 +148,30 @@ app.post("/get", async (req, res) => {
 app.post("/get_one", async (req, res) => {
   users.findOne({ email: req.body.email }, (err, item) => {
     if (req.body.pass == item.pass) {
-      questions.findOne({ question: req.body.question }, (err, item) => {
+      questions.findOne({ question: req.body.question }, (err, item1) => {
+        if (err) {
+          res.send({ status: "false" });
+        } else {
+          details.findOne({ question: req.body.question }, (err, item2) => {
+            if (err) {
+              res.send({ status: "false" });
+            } else {
+              delete item2.question;
+              res.send({ ...item1, ...item2 });
+            }
+          });
+        }
+      });
+    } else {
+      res.status(404).send({ status: "false" });
+    }
+  });
+});
+
+app.post("/get_details", async (req, res) => {
+  users.findOne({ email: req.body.email }, (err, item) => {
+    if (req.body.pass == item.pass) {
+      details.findOne({ question: req.body.question }, (err, item) => {
         if (err) {
           res.send({ status: "false" });
         } else {
@@ -176,20 +202,13 @@ app.post("/set", async (req, res) => {
                 {
                   question: req.body.question,
                   description: req.body.description,
-                  email: req.body.email,
                   time: req.body.time,
-                  answer: "",
-                  atime: "",
-                  aemail: "",
-                  status: "unsolved",
-                  topic: req.body.topic,
-                  module: req.body.module,
                 },
                 (err, result) => {
                   if (err) {
                     res.send({ status: "false" });
                   } else {
-                    data.insertOne(
+                    subscribe.insertOne(
                       {
                         question: req.body.question,
                         email: [req.body.email],
@@ -198,9 +217,16 @@ app.post("/set", async (req, res) => {
                         if (err) {
                           res.send({ status: "false" });
                         } else {
-                          comments.insertOne(
+                          details.insertOne(
                             {
                               question: req.body.question,
+                              status: "unsolved",
+                              topic: req.body.topic,
+                              module: req.body.module,
+                              email: req.body.email,
+                              answer: "",
+                              atime: "",
+                              aemail: "",
                               comments: [],
                             },
                             (err, result) => {
@@ -240,7 +266,7 @@ app.post("/update", async (req, res) => {
             if (item.answer) {
               res.send({ status: "check" });
             } else {
-              questions.updateOne(
+              details.updateOne(
                 { question: req.body.question },
                 {
                   $set: {
@@ -254,7 +280,7 @@ app.post("/update", async (req, res) => {
                   if (err) {
                     res.send({ status: "false" });
                   } else {
-                    data.findOne(
+                    subscribe.findOne(
                       { question: req.body.question },
                       (err, item) => {
                         item.email.forEach((email) => {
@@ -295,11 +321,11 @@ app.post("/update", async (req, res) => {
 app.post("/subscribe", async (req, res) => {
   users.findOne({ email: req.body.email }, (err, item) => {
     if (req.body.pass == item.pass) {
-      data.findOne({ question: req.body.question }, (err, item) => {
+      subscribe.findOne({ question: req.body.question }, (err, item) => {
         if (err) {
           res.send({ status: "false" });
         } else {
-          data.updateOne(
+          subscribe.updateOne(
             { question: req.body.question },
             {
               $set: {
@@ -349,11 +375,11 @@ app.post("/delete", async (req, res) => {
         if (err) {
           res.send({ status: "false" });
         } else {
-          data.deleteOne({ question: req.body.question }, (err, item) => {
+          subscribe.deleteOne({ question: req.body.question }, (err, item) => {
             if (err) {
               res.send({ status: "false" });
             } else {
-              comments.deleteOne(
+              details.deleteOne(
                 { question: req.body.question },
                 (err, item) => {
                   if (err) {
@@ -376,7 +402,7 @@ app.post("/delete", async (req, res) => {
 app.post("/delete_answer", async (req, res) => {
   users.findOne({ email: req.body.email }, (err, item) => {
     if (req.body.pass == item.pass) {
-      questions.updateOne(
+      details.updateOne(
         { question: req.body.question },
         {
           $set: {
@@ -400,33 +426,17 @@ app.post("/delete_answer", async (req, res) => {
   });
 });
 
-app.post("/get_comments", async (req, res) => {
-  users.findOne({ email: req.body.email }, (err, item) => {
-    if (req.body.pass == item.pass) {
-      comments.findOne({ question: req.body.question }, (err, item) => {
-        if (err) {
-          res.send({ status: "false" });
-        } else {
-          res.send({ status: "true", comments: item.comments });
-        }
-      });
-    } else {
-      res.status(404).send({ status: "false" });
-    }
-  });
-});
-
 app.post("/add_comment", async (req, res) => {
   users.findOne({ email: req.body.email }, (err, item) => {
     if (req.body.pass == item.pass) {
-      comments.findOne({ question: req.body.question }, (err, item) => {
+      details.findOne({ question: req.body.question }, (err, item) => {
         if (err) {
           res.send({ status: "false" });
         } else {
           if (item.comments.includes(req.body.comment)) {
             res.send({ status: "check" });
           } else {
-            comments.updateOne(
+            details.updateOne(
               { question: req.body.question },
               {
                 $set: {

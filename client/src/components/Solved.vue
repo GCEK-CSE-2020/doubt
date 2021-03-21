@@ -28,17 +28,18 @@
     <div class="block">
       <label class="head">{{ details.question }}</label>
       <br />
-      <span>{{ details.time }}</span>
+      <span>{{ new Date(details.time) }}</span>
       <div v-html="details.description"></div>
     </div>
     <div class="block">
       <label class="head">Answer</label>
       <br />
-      <span>{{ details.atime }}</span>
+      <span>{{ new Date(details.atime) }}</span>
       <div v-html="details.answer" class="detail"></div>
     </div>
     <Comments
       :question="details.question"
+      :comments="details.comments"
       :email="email"
       :api="api"
       :startProgress="startProgress"

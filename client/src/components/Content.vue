@@ -12,7 +12,7 @@
     >
       <label class="head">{{ details.question }}</label>
       <br />
-      <span>{{ details.time }}</span>
+      <span>{{ new Date(details.time) }}</span>
       <div v-html="details.description"></div>
     </div>
     <img
@@ -37,6 +37,7 @@
     :details="current"
     :email="email"
     :api="api"
+    :fetchComments="fetchDetails"
     :startProgress="startProgress"
     :endProgress="endProgress"
     v-if="unsolved"
@@ -76,18 +77,51 @@ export default {
     const url = window.location.href.split("?");
 
     if (url.length == 2) {
-      this.startProgress();
+      this.fetchDetails();
+    }
+  },
 
+  methods: {
+    pop(index) {
+      this.startProgress();
       fetchData(
-        "get_one",
+        "get_details",
         {
-          question: decodeURIComponent(url[1].split("=")[1]),
+          question: this.question,
           email: this.email,
           pass: this.api,
         },
         (json) => {
           this.endProgress();
-          if (json.status != false) {
+          if (json.status == "false") {
+            alert("server Error");
+          } else {
+            delete json.question;
+            this.current = { ...this.data[index], ...json };
+            if (json.answer) {
+              this.solved = true;
+            } else {
+              this.unsolved = true;
+            }
+          }
+        }
+      );
+    },
+
+    fetchDetails() {
+      this.startProgress();
+      fetchData(
+        "one",
+        {
+          question: this.question,
+          email: this.email,
+          pass: this.api,
+        },
+        (json) => {
+          this.endProgress();
+          if (json.status == "false") {
+            alert("server Error");
+          } else {
             this.current = json;
             if (json.answer) {
               this.solved = true;
@@ -97,17 +131,6 @@ export default {
           }
         }
       );
-    }
-  },
-
-  methods: {
-    pop(index) {
-      this.current = this.data[index];
-      if (this.data[index].answer) {
-        this.solved = true;
-      } else {
-        this.unsolved = true;
-      }
     },
 
     setSolved() {

@@ -15,7 +15,7 @@
       <select
         v-model="module"
         title="Select Your Module"
-        v-show="topic != 'common'"
+        v-show="topic != 'common' && topic != ''"
       >
         <option value="">All</option>
         <option value="1">Module 1</option>
@@ -26,9 +26,10 @@
       </select>
       <label>Status:</label>
       <select v-model="status" title="Select Question Status">
+        <option value="">All</option>
         <option value="solved">Solved</option>
         <option value="unsolved">Unsolved</option>
-        <option value="">Your Questions</option>
+        <option value="email">Your Questions</option>
       </select>
       <label>Search:</label>
       <div>
@@ -106,9 +107,9 @@ export default {
 
   data() {
     return {
-      topic: "common",
-      module: "1",
-      status: "solved",
+      topic: "",
+      module: "",
+      status: "",
       search: "",
       asking: false,
       changing: false,

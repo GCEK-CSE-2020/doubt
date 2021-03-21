@@ -16,7 +16,6 @@
       title="Select Your Module"
       v-show="topic != 'common'"
     >
-      <option value="">All</option>
       <option value="1">Module 1</option>
       <option value="2">Module 2</option>
       <option value="3">Module 3</option>
@@ -94,7 +93,7 @@ export default {
           {
             question: this.question,
             description: this.description,
-            time: new Date().toString(),
+            time: new Date().getTime(),
             topic: this.topic,
             module: this.module,
             email: this.email,
