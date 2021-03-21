@@ -88,7 +88,7 @@ export default {
       fetchData(
         "get_details",
         {
-          question: this.question,
+          question: this.data[index].question,
           email: this.email,
           pass: this.api,
         },
@@ -98,7 +98,6 @@ export default {
             alert("server Error");
           } else {
             delete json.question;
-            console.log(json);
             this.current = { ...this.data[index], ...json };
             if (json.answer) {
               this.solved = true;
