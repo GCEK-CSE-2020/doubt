@@ -39,11 +39,8 @@
       :init="{
         menubar: false,
         branding: false,
-        resize: 'both',
+        resize: true,
         width: 'calc(100vw - 2em)',
-        max_width: 'calc(450px - 2em)',
-        theme_advanced_resizing: true,
-        theme_advanced_resizing_use_cookie: false,
         height: '15em',
         skin: 'oxide-dark',
         content_css: 'dark',
@@ -178,7 +175,8 @@ img {
 
 <style>
 .tox-tinymce {
-  margin: 1em !important;
+  margin: 1em auto !important;
+  max-width: calc(450px - 2em) !important;
 }
 
 .detail img {
