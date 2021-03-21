@@ -27,7 +27,7 @@
     :details="current"
     :email="email"
     :api="api"
-    :fetchComments="fetchDetails"
+    :fetchComments="fetchComments"
     :startProgress="startProgress"
     :endProgress="endProgress"
     v-if="solved"
@@ -38,7 +38,7 @@
     :details="current"
     :email="email"
     :api="api"
-    :fetchComments="fetchDetails"
+    :fetchComments="fetchComments"
     :startProgress="startProgress"
     :endProgress="endProgress"
     v-if="unsolved"
@@ -77,8 +77,8 @@ export default {
   mounted() {
     const url = window.location.href.split("?");
 
-    if (url.length == 2) {
-      this.fetchDetails();
+    if (url.length == 2 && url[1].split("=").length == 2) {
+      this.fetchDetails(encodeURIComponent(url[1].split("=")[1]));
     }
   },
 
@@ -110,12 +110,12 @@ export default {
       );
     },
 
-    fetchDetails() {
+    fetchDetails(question) {
       this.startProgress();
       fetchData(
         "get_one",
         {
-          question: this.question,
+          question: question,
           email: this.email,
           pass: this.api,
         },
@@ -130,6 +130,26 @@ export default {
             } else {
               this.unsolved = true;
             }
+          }
+        }
+      );
+    },
+
+    fetchComments() {
+      this.startProgress();
+      fetchData(
+        "get_one",
+        {
+          question: this.current.question,
+          email: this.email,
+          pass: this.api,
+        },
+        (json) => {
+          this.endProgress();
+          if (json.status == "false") {
+            alert("server Error");
+          } else {
+            this.current = json;
           }
         }
       );

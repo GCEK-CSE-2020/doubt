@@ -417,7 +417,6 @@ app.post("/delete_answer", async (req, res) => {
           $set: {
             answer: "",
             atime: "",
-            status: "unsolved",
             aemail: "",
           },
         },
@@ -425,7 +424,21 @@ app.post("/delete_answer", async (req, res) => {
           if (err) {
             res.send({ status: "false" });
           } else {
-            res.send({ status: "true" });
+            questions.updateOne(
+              { question: req.body.question },
+              {
+                $set: {
+                  status: "unsolved",
+                },
+              },
+              (err, item) => {
+                if (err) {
+                  res.send({ status: "false" });
+                } else {
+                  res.send({ status: "true" });
+                }
+              }
+            );
           }
         }
       );
