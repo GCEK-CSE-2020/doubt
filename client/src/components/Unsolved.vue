@@ -36,8 +36,11 @@
       :init="{
         menubar: false,
         branding: false,
-        resize: 'both',
+        resize: true,
         width: 'calc(100vw - 2em)',
+        max_width: 'calc(450px - 2em)',
+        theme_advanced_resizing: true,
+        theme_advanced_resizing_use_cookie: false,
         height: '10em',
         skin: 'oxide-dark',
         content_css: 'dark',
@@ -94,17 +97,15 @@ export default {
 
   mounted() {
     if (navigator.share) {
-      document.querySelector(".share").addEventListener("click", () => {
-        navigator.share({
-          title: "GCEK CSE 2020 FORUM",
-          text: this.details.question, // Change Share Text Here
-          url:
-            "https://gcekcse2020.herokuapp.com/?q=" +
-            encodeURIComponent(this.details.question), // Change URL Here
-        });
-      });
+      document.querySelector(".share").addEventListener("click", this.share);
     } else {
       document.querySelector(".share").style.display = "none";
+    }
+  },
+
+  beforeUnmount() {
+    if (navigator.share) {
+      document.querySelector(".share").removeEventListener("click", this.share);
     }
   },
 
@@ -183,6 +184,16 @@ export default {
           }
         }
       );
+    },
+
+    share() {
+      navigator.share({
+        title: "GCEK CSE 2020 FORUM",
+        text: this.details.question, // Change Share Text Here
+        url:
+          "https://gcekcse2020.herokuapp.com/?q=" +
+          encodeURIComponent(this.details.question), // Change URL Here
+      });
     },
   },
 };
