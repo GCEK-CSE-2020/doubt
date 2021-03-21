@@ -1,7 +1,7 @@
 <template>
   <div class="comments">
     <label>Comments</label>
-    <div>
+    <div class="comment-div">
       <input
         type="text"
         v-model="comment"
@@ -85,12 +85,15 @@ export default {
   text-align: left;
 }
 
+.comment-div {
+  margin: 0.5em auto;
+}
+
 label {
   font-size: 1.2em;
   color: #0075d2;
   font-weight: bold;
   text-align: center;
-  margin: 1em 0 2em 0;
 }
 
 input {
