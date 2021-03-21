@@ -38,7 +38,7 @@
         branding: false,
         resize: true,
         width: 'calc(100vw - 2em)',
-        height: '10em',
+        height: '15em',
         skin: 'oxide-dark',
         content_css: 'dark',
         browser_spellcheck: true,
