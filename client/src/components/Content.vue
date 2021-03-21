@@ -98,6 +98,7 @@ export default {
             alert("server Error");
           } else {
             delete json.question;
+            console.log(json);
             this.current = { ...this.data[index], ...json };
             if (json.answer) {
               this.solved = true;
@@ -112,7 +113,7 @@ export default {
     fetchDetails() {
       this.startProgress();
       fetchData(
-        "one",
+        "get_one",
         {
           question: this.question,
           email: this.email,
