@@ -43,10 +43,6 @@ export default {
   },
 
   created() {
-    if (!navigator.onLine) {
-      alert("This Application Can't Run Without Internet");
-    }
-
     const log = localStorage.getItem("log");
 
     if (log) {

@@ -21,11 +21,13 @@ if (process.env.NODE_ENV === "production") {
     },
     updated() {
       console.log("New content is available; please refresh.");
+      alert("Update Available Restart Application To Avail Update");
     },
     offline() {
       console.log(
         "No internet connection found. App is running in offline mode."
       );
+      alert("This Application Can't Run Without Internet");
     },
     error(error) {
       console.error("Error during service worker registration:", error);
