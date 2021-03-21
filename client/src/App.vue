@@ -43,8 +43,11 @@ export default {
   },
 
   created() {
-    const log = localStorage.getItem("log");
+    if (!navigator.onLine) {
+      alert("This Application Can't Run Without Internet");
+    }
 
+    const log = localStorage.getItem("log");
     if (log) {
       if (Number(JSON.parse(log).expire) + 604800000 > new Date().getTime()) {
         this.email = JSON.parse(log).email;
