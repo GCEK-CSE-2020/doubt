@@ -202,6 +202,7 @@ app.post("/set", async (req, res) => {
                   question: req.body.question,
                   description: req.body.description,
                   status: "unsolved",
+                  email: req.body.email,
                   topic: req.body.topic,
                   module: req.body.module,
                   time: req.body.time,
@@ -222,7 +223,6 @@ app.post("/set", async (req, res) => {
                           details.insertOne(
                             {
                               question: req.body.question,
-                              email: req.body.email,
                               answer: "",
                               atime: "",
                               aemail: "",
