@@ -56,15 +56,14 @@
 </template>
 
 <script>
-import fetchData from "../scripts/fetchData";
 import Editor from "@tinymce/tinymce-vue";
 
 export default {
   name: "Ask",
 
   props: {
+    socket: Object,
     setAsk: Function,
-    fetchQuestions: Function,
     email: String,
     api: String,
     startProgress: Function,
@@ -84,35 +83,32 @@ export default {
     };
   },
 
+  created() {
+    this.socket.on("set", (json) => {
+      if (json.status == "true") {
+        this.setAsk();
+      } else if (json.status == "check") {
+        alert("This Question Is Already Asked");
+      } else {
+        alert("Server Error");
+      }
+    });
+  },
+
   methods: {
     ask() {
       if (this.question && this.description) {
-        this.startProgress();
-        fetchData(
-          "set",
-          {
-            question: this.question,
-            description: this.description,
-            time: new Date().getTime(),
-            topic: this.topic,
-            module: this.module,
-            email: this.email,
-            pass: this.api,
-          },
-          (json) => {
-            this.endProgress();
-            if (json.status == "true") {
-              this.fetchQuestions();
-              this.setAsk();
-            } else if (json.status == "check") {
-              alert("This Question Is Already Asked");
-            } else {
-              alert("Server Error");
-            }
-          }
-        );
+        this.socket.emit("set", {
+          question: this.question,
+          description: this.description,
+          time: new Date().getTime(),
+          topic: this.topic,
+          module: this.module,
+          email: this.email,
+          pass: this.api,
+        });
       } else {
-        alert("Welcome Naughty Human");
+        alert("All Fields Are Required");
       }
     },
   },

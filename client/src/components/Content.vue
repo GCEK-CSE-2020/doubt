@@ -23,22 +23,24 @@
     />
   </div>
   <Solved
+    :socket="socket"
     :setSolved="setSolved"
     :details="current"
     :email="email"
     :api="api"
-    :fetchComments="fetchComments"
+    :fetchComments="fetchDetails"
     :startProgress="startProgress"
     :endProgress="endProgress"
     v-if="solved"
   />
 
   <Unsolved
+    :socket="socket"
     :setUnsolved="setUnsolved"
     :details="current"
     :email="email"
     :api="api"
-    :fetchComments="fetchComments"
+    :fetchComments="fetchDetails"
     :startProgress="startProgress"
     :endProgress="endProgress"
     v-if="unsolved"
@@ -46,7 +48,6 @@
 </template>
 
 <script>
-import fetchData from "../scripts/fetchData";
 import Solved from "./Solved";
 import Unsolved from "./Unsolved";
 
@@ -54,6 +55,7 @@ export default {
   name: "Content",
 
   props: {
+    socket: Object,
     data: Array,
     email: String,
     api: String,
@@ -64,6 +66,7 @@ export default {
   data() {
     return {
       current: {},
+      currentIndex: null,
       solved: false,
       unsolved: false,
     };
@@ -72,6 +75,35 @@ export default {
   components: {
     Solved,
     Unsolved,
+  },
+
+  created() {
+    this.socket.on("get_details", (json) => {
+      if (json.status == "false") {
+        alert("server Error");
+      } else {
+        delete json.question;
+        this.current = { ...this.data[this.currentIndex], ...json };
+        if (json.answer) {
+          this.solved = true;
+        } else {
+          this.unsolved = true;
+        }
+      }
+    });
+
+    this.socket.on("get_one", (json) => {
+      if (json.status == "false") {
+        alert("server Error");
+      } else {
+        this.current = json;
+        if (json.answer) {
+          this.solved = true;
+        } else {
+          this.unsolved = true;
+        }
+      }
+    });
   },
 
   mounted() {
@@ -84,74 +116,20 @@ export default {
 
   methods: {
     pop(index) {
-      this.startProgress();
-      fetchData(
-        "get_details",
-        {
-          question: this.data[index].question,
-          email: this.email,
-          pass: this.api,
-        },
-        (json) => {
-          this.endProgress();
-          if (json.status == "false") {
-            alert("server Error");
-          } else {
-            delete json.question;
-            this.current = { ...this.data[index], ...json };
-            if (json.answer) {
-              this.solved = true;
-            } else {
-              this.unsolved = true;
-            }
-          }
-        }
-      );
+      this.currentIndex = index;
+      this.socket.emit("get_details", {
+        question: this.data[index].question,
+        email: this.email,
+        pass: this.api,
+      });
     },
 
     fetchDetails(question) {
-      this.startProgress();
-      fetchData(
-        "get_one",
-        {
-          question: question,
-          email: this.email,
-          pass: this.api,
-        },
-        (json) => {
-          this.endProgress();
-          if (json.status == "false") {
-            alert("server Error");
-          } else {
-            this.current = json;
-            if (json.answer) {
-              this.solved = true;
-            } else {
-              this.unsolved = true;
-            }
-          }
-        }
-      );
-    },
-
-    fetchComments() {
-      this.startProgress();
-      fetchData(
-        "get_one",
-        {
-          question: this.current.question,
-          email: this.email,
-          pass: this.api,
-        },
-        (json) => {
-          this.endProgress();
-          if (json.status == "false") {
-            alert("server Error");
-          } else {
-            this.current = json;
-          }
-        }
-      );
+      this.socket.emit("get_one", {
+        question: question,
+        email: this.email,
+        pass: this.api,
+      });
     },
 
     setSolved() {

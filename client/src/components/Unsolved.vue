@@ -51,6 +51,7 @@
     />
     <input type="button" @click="post" value="Post Answer" />
     <Comments
+      :socket="socket"
       :question="details.question"
       :comments="details.comments"
       :email="email"
@@ -63,7 +64,6 @@
 </template>
 
 <script>
-import fetchData from "../scripts/fetchData";
 import Editor from "@tinymce/tinymce-vue";
 import Comments from "./Comments";
 
@@ -71,6 +71,7 @@ export default {
   name: "Ask",
 
   props: {
+    socket: Object,
     setUnsolved: Function,
     details: Object,
     email: String,
@@ -92,6 +93,36 @@ export default {
     };
   },
 
+  created() {
+    this.socket.on("update", (json) => {
+      if (json.status == "true") {
+        this.setUnsolved();
+      } else if (json.status == "check") {
+        alert("This Question Is Already Answered");
+      } else {
+        alert("Server Error");
+      }
+    });
+
+    this.socket.on("delete", (json) => {
+      if (json.status == "true") {
+        alert("Successfully Deleted");
+        this.setUnsolved();
+      } else {
+        alert("Server Error");
+      }
+    });
+
+    this.socket.on("subscribe", (json) => {
+      if (json.status == "true") {
+        alert("Successfully Subscribed");
+        this.setUnsolved();
+      } else {
+        alert("Server Error");
+      }
+    });
+  },
+
   mounted() {
     if (navigator.share) {
       document.querySelector(".share").addEventListener("click", this.share);
@@ -111,76 +142,34 @@ export default {
       const conf = confirm("Are You Sure?");
 
       if (conf) {
-        this.startProgress();
-        fetchData(
-          "delete",
-          {
-            question: this.details.question,
-            email: this.email,
-            pass: this.api,
-          },
-          (json) => {
-            this.endProgress();
-            if (json.status == "true") {
-              document.querySelector(".search").click();
-              alert("Successfully Deleted");
-              this.setUnsolved();
-            } else {
-              alert("Server Error");
-            }
-          }
-        );
+        this.socket.emit("delete", {
+          question: this.details.question,
+          email: this.email,
+          pass: this.api,
+        });
       }
     },
 
     post() {
       if (this.answer) {
-        this.startProgress();
-        fetchData(
-          "update",
-          {
-            question: this.details.question,
-            answer: this.answer,
-            atime: new Date().getTime(),
-            aemail: this.email,
-            pass: this.api,
-          },
-          (json) => {
-            this.endProgress();
-            if (json.status == "true") {
-              document.querySelector(".search").click();
-              this.setUnsolved();
-            } else if (json.status == "check") {
-              alert("This Question Is Already Answered");
-            } else {
-              alert("Server Error");
-            }
-          }
-        );
+        this.socket.emit("update", {
+          question: this.details.question,
+          answer: this.answer,
+          atime: new Date().getTime(),
+          aemail: this.email,
+          pass: this.api,
+        });
       } else {
         alert("Welcome Naughty Human");
       }
     },
 
     subscribe() {
-      this.startProgress();
-      fetchData(
-        "subscribe",
-        {
-          question: this.details.question,
-          email: this.email,
-          pass: this.api,
-        },
-        (json) => {
-          this.endProgress();
-          if (json.status == "true") {
-            alert("Successfully Subscribed");
-            this.setUnsolved();
-          } else {
-            alert("Server Error");
-          }
-        }
-      );
+      this.socket.emit("subscribe", {
+        question: this.details.question,
+        email: this.email,
+        pass: this.api,
+      });
     },
 
     share() {

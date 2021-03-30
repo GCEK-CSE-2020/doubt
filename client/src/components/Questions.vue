@@ -1,5 +1,6 @@
 <template>
   <Filter
+    :socket="socket"
     :setData="setData"
     :logout="logout"
     :email="email"
@@ -9,6 +10,7 @@
   />
 
   <Content
+    :socket="socket"
     :data="data"
     :email="email"
     :api="api"
@@ -25,6 +27,7 @@ export default {
   name: "Questions",
 
   props: {
+    socket: Object,
     logout: Function,
     email: String,
     api: String,

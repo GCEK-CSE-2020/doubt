@@ -19,12 +19,11 @@
 </template>
 
 <script>
-import fetchData from "../scripts/fetchData";
-
 export default {
   name: "Comments",
 
   props: {
+    socket: Object,
     question: String,
     comments: Array,
     email: String,
@@ -40,29 +39,29 @@ export default {
     };
   },
 
+  created() {
+    this.socket.on("add_comment", (json) => {
+      if (json.status == "check") {
+        alert("This Comment Already Exists");
+      }
+    });
+  },
+
+  mounted() {
+    this.socket.on("comments_updated", () => {
+      this.fetchComments(this.question);
+    });
+  },
+
   methods: {
     addComment() {
       if (this.comment) {
-        this.startProgress();
-        fetchData(
-          "add_comment",
-          {
-            question: this.question,
-            email: this.email,
-            pass: this.api,
-            comment: this.comment,
-          },
-          (json) => {
-            this.endProgress();
-            if (json.status == "true") {
-              this.fetchComments();
-            } else if (json.status == "check") {
-              alert("This Comment Already Exists");
-            } else {
-              alert("server Error");
-            }
-          }
-        );
+        this.socket.emit("add_comment", {
+          question: this.question,
+          email: this.email,
+          pass: this.api,
+          comment: this.comment,
+        });
       } else {
         alert("Type Something To Add");
       }

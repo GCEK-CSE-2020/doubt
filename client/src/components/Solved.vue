@@ -38,6 +38,7 @@
       <div v-html="details.answer" class="detail"></div>
     </div>
     <Comments
+      :socket="socket"
       :question="details.question"
       :comments="details.comments"
       :email="email"
@@ -50,13 +51,13 @@
 </template>
 
 <script>
-import fetchData from "../scripts/fetchData";
 import Comments from "./Comments";
 
 export default {
   name: "Ask",
 
   props: {
+    socket: Object,
     setSolved: Function,
     details: Object,
     email: String,
@@ -90,30 +91,45 @@ export default {
     }
   },
 
+  created() {
+    this.socket.on("delete", (json) => {
+      if (json.status == "true") {
+        alert("Successfully Deleted");
+        this.setSolved();
+      } else {
+        alert("Server Error");
+      }
+    });
+
+    this.socket.on("delete_answer", (json) => {
+      if (json.status == "true") {
+        alert("Successfully Deleted");
+        this.setSolved();
+      } else {
+        alert("Server Error");
+      }
+    });
+
+    this.socket.on("wrong", (json) => {
+      if (json.status == "true") {
+        alert("Successfully Informed to Responsible Team");
+        this.setSolved();
+      } else {
+        alert("Server Error");
+      }
+    });
+  },
+
   methods: {
     deleteQuestion() {
       const conf = confirm("Are You Sure?");
 
       if (conf) {
-        this.startProgress();
-        fetchData(
-          "delete",
-          {
-            question: this.details.question,
-            email: this.email,
-            pass: this.api,
-          },
-          (json) => {
-            this.endProgress();
-            if (json.status == "true") {
-              document.querySelector(".search").click();
-              alert("Successfully Deleted");
-              this.setSolved();
-            } else {
-              alert("Server Error");
-            }
-          }
-        );
+        this.socket.emit("delete", {
+          question: this.details.question,
+          email: this.email,
+          pass: this.api,
+        });
       }
     },
 
@@ -121,25 +137,11 @@ export default {
       const conf = confirm("Are You Sure?");
 
       if (conf) {
-        this.startProgress();
-        fetchData(
-          "delete_answer",
-          {
-            question: this.details.question,
-            email: this.email,
-            pass: this.api,
-          },
-          (json) => {
-            this.endProgress();
-            if (json.status == "true") {
-              document.querySelector(".search").click();
-              alert("Successfully Deleted");
-              this.setSolved();
-            } else {
-              alert("Server Error");
-            }
-          }
-        );
+        this.socket.emit("delete_answer", {
+          question: this.details.question,
+          email: this.email,
+          pass: this.api,
+        });
       }
     },
 
@@ -147,24 +149,11 @@ export default {
       const conf = confirm("Are You Sure?");
 
       if (conf) {
-        this.startProgress();
-        fetchData(
-          "wrong",
-          {
-            question: this.details.question,
-            email: this.email,
-            pass: this.api,
-          },
-          (json) => {
-            this.endProgress();
-            if (json.status == "true") {
-              alert("Successfully Informed to Responsible Team");
-              this.setSolved();
-            } else {
-              alert("Server Error");
-            }
-          }
-        );
+        this.socket.emit("wrong", {
+          question: this.details.question,
+          email: this.email,
+          pass: this.api,
+        });
       }
     },
 

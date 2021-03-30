@@ -65,8 +65,8 @@
   </div>
 
   <Ask
+    :socket="socket"
     :setAsk="setAsk"
-    :fetchQuestions="fetchQuestions"
     :email="email"
     :api="api"
     v-if="asking"
@@ -84,7 +84,6 @@
 </template>
 
 <script>
-import fetchData from "../scripts/fetchData";
 import Ask from "./Ask";
 import ChangePass from "./ChangePass";
 
@@ -97,6 +96,7 @@ export default {
   },
 
   props: {
+    socket: Object,
     setData: Function,
     logout: Function,
     email: String,
@@ -131,32 +131,34 @@ export default {
     },
   },
 
+  created() {
+    this.socket.on("get", (json) => {
+      if (json.status) {
+        alert("Something Went Wrong");
+      } else {
+        this.setData(json);
+      }
+    });
+
+    this.socket.on("updated", () => {
+      this.fetchQuestions();
+    });
+  },
+
   mounted() {
     this.fetchQuestions();
   },
 
   methods: {
     fetchQuestions() {
-      this.startProgress();
-      fetchData(
-        "get",
-        {
-          status: this.status,
-          topic: this.topic,
-          module: this.module,
-          quest: this.search,
-          email: this.email,
-          pass: this.api,
-        },
-        (json) => {
-          this.endProgress();
-          if (json.status) {
-            alert("Something Went Wrong");
-          } else {
-            this.setData(json);
-          }
-        }
-      );
+      this.socket.emit("get", {
+        status: this.status,
+        topic: this.topic,
+        module: this.module,
+        quest: this.search,
+        email: this.email,
+        pass: this.api,
+      });
       this.filter = false;
     },
 

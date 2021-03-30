@@ -2,6 +2,7 @@
   <TopProgressBar ref="topProgress" color="#0075d2" />
 
   <Questions
+    :socket="socket"
     :email="email"
     :api="api"
     :logout="logout"
@@ -21,6 +22,7 @@
 </template>
 
 <script>
+import { io } from "socket.io-client";
 import Questions from "./components/Questions.vue";
 import Login from "./components/Login.vue";
 import TopProgressBar from "./components/TopProgressBar";
@@ -36,6 +38,7 @@ export default {
 
   data() {
     return {
+      socket: io(),
       log: false,
       email: "",
       api: "",

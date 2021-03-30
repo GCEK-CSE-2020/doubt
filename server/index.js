@@ -1,4 +1,5 @@
 const express = require("express");
+const socket = require("socket.io");
 const { MongoClient } = require("mongodb");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
@@ -95,145 +96,232 @@ app.post("/change", async (req, res) => {
   });
 });
 
-app.post("/get", async (req, res) => {
-  users.findOne({ email: req.body.email }, (err, item) => {
-    if (req.body.pass == item.pass) {
-      let data = {};
+let server = app.listen(process.env.PORT || 3000, () => {
+  console.log("running");
+});
 
-      if (req.body.status) {
-        if (req.body.status == "email") {
-          data.email = req.body.email;
-        } else {
-          data.status = req.body.status;
+let io = socket(server);
+
+io.on("connection", (socket) => {
+  console.log("socket connected");
+
+  socket.on("get", (req) => {
+    users.findOne({ email: req.email }, (err, item) => {
+      if (req.pass == item.pass) {
+        let data = {};
+
+        if (req.status) {
+          if (req.status == "email") {
+            data.email = req.email;
+          } else {
+            data.status = req.status;
+          }
         }
-      }
 
-      if (req.body.topic) {
-        data.topic = req.body.topic;
-      }
+        if (req.topic) {
+          data.topic = req.topic;
+        }
 
-      if (req.body.module && req.body.topic && req.body.topic != "common") {
-        data.module = req.body.module;
-      }
+        if (req.module && req.topic && req.topic != "common") {
+          data.module = req.module;
+        }
 
-      if (req.body.quest) {
-        data["$text"] = {};
-        data["$text"]["$search"] = req.body.quest;
+        if (req.quest) {
+          data["$text"] = {};
+          data["$text"]["$search"] = req.quest;
+          questions
+            .find(data)
+            .sort({ time: req.status == "unsolved" ? 1 : -1 })
+            .toArray((err, items) => {
+              if (err) {
+                io.to(socket.id).emit("get", { status: false });
+              } else {
+                io.to(socket.id).emit("get", items);
+              }
+            });
+        } else {
+          questions.find(data).toArray((err, items) => {
+            if (err) {
+              io.to(socket.id).emit("get", { status: "false" });
+            } else {
+              io.to(socket.id).emit("get", items);
+            }
+          });
+        }
+      } else {
+        io.to(socket.id).emit("get", { status: "false" });
+      }
+    });
+  });
+
+  socket.on("get_one", (req) => {
+    users.findOne({ email: req.email }, (err, item) => {
+      if (req.pass == item.pass) {
+        questions.findOne({ question: req.question }, (err, item1) => {
+          if (err || !item1) {
+            io.to(socket.id).emit("get_one", { status: "false" });
+          } else {
+            details.findOne({ question: req.question }, (err, item2) => {
+              if (err || !item2) {
+                io.to(socket.id).emit("get_one", { status: "false" });
+              } else {
+                delete item2.question;
+                io.to(socket.id).emit("get_one", { ...item1, ...item2 });
+              }
+            });
+          }
+        });
+      } else {
+        io.to(socket.id).emit("get_one", { status: "false" });
+      }
+    });
+  });
+
+  socket.on("get_details", (req) => {
+    users.findOne({ email: req.email }, (err, item) => {
+      if (req.pass == item.pass) {
+        details.findOne({ question: req.question }, (err, item) => {
+          if (err) {
+            io.to(socket.id).emit("get_details", { status: "false" });
+          } else {
+            io.to(socket.id).emit("get_details", { ...item });
+          }
+        });
+      } else {
+        rio.to(socket.id).emit("get_details", { status: "false" });
+      }
+    });
+  });
+
+  socket.on("set", (req) => {
+    users.findOne({ email: req.email }, (err, item) => {
+      if (req.pass == item.pass) {
         questions
-          .find(data)
-          .sort({ time: req.body.status == "unsolved" ? 1 : -1 })
+          .find({
+            question: req.question,
+          })
           .toArray((err, items) => {
             if (err) {
-              res.send({ status: false });
+              io.to(socket.id).emit("set", { status: "false" });
             } else {
-              res.send(items);
+              if (items.length) {
+                io.to(socket.id).emit("set", { status: "check" });
+              } else {
+                questions.insertOne(
+                  {
+                    question: req.question,
+                    description: req.description,
+                    status: "unsolved",
+                    email: req.email,
+                    topic: req.topic,
+                    module: req.module,
+                    time: req.time,
+                  },
+                  (err, result) => {
+                    if (err) {
+                      io.to(socket.id).emit("set", { status: "false" });
+                    } else {
+                      subscribe.insertOne(
+                        {
+                          question: req.question,
+                          email: [req.email],
+                        },
+                        (err, result) => {
+                          if (err) {
+                            io.to(socket.id).emit("set", { status: "false" });
+                          } else {
+                            details.insertOne(
+                              {
+                                question: req.question,
+                                answer: "",
+                                atime: "",
+                                aemail: "",
+                                comments: [],
+                              },
+                              (err, result) => {
+                                if (err) {
+                                  io.to(socket.id).emit("set", {
+                                    status: "false",
+                                  });
+                                } else {
+                                  io.to(socket.id).emit("set", {
+                                    status: "true",
+                                  });
+                                  io.sockets.emit("updated");
+                                }
+                              }
+                            );
+                          }
+                        }
+                      );
+                    }
+                  }
+                );
+              }
             }
           });
       } else {
-        questions.find(data).toArray((err, items) => {
-          if (err) {
-            res.send({ status: "false" });
-          } else {
-            res.send(items);
-          }
-        });
+        io.to(socket.id).emit("set", { status: "false" });
       }
-    } else {
-      res.status(404).send({ status: "false" });
-    }
+    });
   });
-});
 
-app.post("/get_one", async (req, res) => {
-  users.findOne({ email: req.body.email }, (err, item) => {
-    if (req.body.pass == item.pass) {
-      questions.findOne({ question: req.body.question }, (err, item1) => {
-        if (err) {
-          res.send({ status: "false" });
-        } else {
-          details.findOne({ question: req.body.question }, (err, item2) => {
-            if (err) {
-              res.send({ status: "false" });
-            } else {
-              delete item2.question;
-              res.send({ ...item1, ...item2 });
-            }
-          });
-        }
-      });
-    } else {
-      res.status(404).send({ status: "false" });
-    }
-  });
-});
-
-app.post("/get_details", async (req, res) => {
-  users.findOne({ email: req.body.email }, (err, item) => {
-    if (req.body.pass == item.pass) {
-      details.findOne({ question: req.body.question }, (err, item) => {
-        if (err) {
-          res.send({ status: "false" });
-        } else {
-          res.send({ ...item });
-        }
-      });
-    } else {
-      res.status(404).send({ status: "false" });
-    }
-  });
-});
-
-app.post("/set", async (req, res) => {
-  users.findOne({ email: req.body.email }, (err, item) => {
-    if (req.body.pass == item.pass) {
-      questions
-        .find({
-          question: req.body.question,
-        })
-        .toArray((err, items) => {
+  socket.on("update", (req) => {
+    users.findOne({ email: req.aemail }, (err, item) => {
+      if (req.pass == item.pass) {
+        details.findOne({ question: req.question }, (err, item) => {
           if (err) {
-            res.send({ status: "false" });
+            io.to(socket.id).emit("update", { status: "false" });
           } else {
-            if (items.length) {
-              res.send({ status: "check" });
+            if (item.answer) {
+              io.to(socket.id).emit("update", { status: "check" });
             } else {
-              questions.insertOne(
+              details.updateOne(
+                { question: req.question },
                 {
-                  question: req.body.question,
-                  description: req.body.description,
-                  status: "unsolved",
-                  email: req.body.email,
-                  topic: req.body.topic,
-                  module: req.body.module,
-                  time: req.body.time,
+                  $set: {
+                    answer: req.answer,
+                    atime: req.atime,
+                    aemail: req.aemail,
+                  },
                 },
-                (err, result) => {
+                (err, item) => {
                   if (err) {
-                    res.send({ status: "false" });
+                    io.to(socket.id).emit("update", { status: "false" });
                   } else {
-                    subscribe.insertOne(
+                    questions.updateOne(
+                      { question: req.question },
                       {
-                        question: req.body.question,
-                        email: [req.body.email],
+                        $set: {
+                          status: "solved",
+                        },
                       },
-                      (err, result) => {
+                      (err, item) => {
                         if (err) {
-                          res.send({ status: "false" });
+                          io.to(socket.id).emit("update", { status: "false" });
                         } else {
-                          details.insertOne(
-                            {
-                              question: req.body.question,
-                              answer: "",
-                              atime: "",
-                              aemail: "",
-                              comments: [],
-                            },
-                            (err, result) => {
-                              if (err) {
-                                res.send({ status: "false" });
-                              } else {
-                                res.send({ status: "true" });
-                              }
+                          subscribe.findOne(
+                            { question: req.question },
+                            (err, item) => {
+                              item.email.forEach((email) => {
+                                transporter.sendMail({
+                                  from: "gcekcse2020@gmail.com",
+                                  to: email,
+                                  subject: "Your Doubt Is Solved",
+                                  text:
+                                    "Question: " +
+                                    req.question +
+                                    "\n" +
+                                    "Check Your Answer Here: " +
+                                    `https://gcekcse2020.herokuapp.com/?q=${encodeURIComponent(
+                                      req.question
+                                    )}`,
+                                });
+                                io.to(socket.id).emit("update", {
+                                  status: "true",
+                                });
+                                io.sockets.emit("updated");
+                              });
                             }
                           );
                         }
@@ -245,243 +333,164 @@ app.post("/set", async (req, res) => {
             }
           }
         });
-    } else {
-      res.status(404).send({ status: "false" });
-    }
+      } else {
+        io.to(socket.id).emit("update", { status: "false" });
+      }
+    });
   });
-});
 
-app.post("/update", async (req, res) => {
-  users.findOne({ email: req.body.aemail }, (err, item) => {
-    if (req.body.pass == item.pass) {
-      details.findOne({ question: req.body.question }, (err, item) => {
-        if (err) {
-          res.send({ status: "false" });
-        } else {
-          if (item.answer) {
-            res.send({ status: "check" });
+  socket.on("subscribe", (req) => {
+    users.findOne({ email: req.email }, (err, item) => {
+      if (req.pass == item.pass) {
+        subscribe.findOne({ question: req.question }, (err, item) => {
+          if (err) {
+            io.to(socket.id).emit("subscribe", { status: "false" });
           } else {
-            details.updateOne(
-              { question: req.body.question },
+            subscribe.updateOne(
+              { question: req.question },
               {
                 $set: {
-                  answer: req.body.answer,
-                  atime: req.body.atime,
-                  aemail: req.body.aemail,
+                  email: [...item.email, req.email],
                 },
               },
               (err, item) => {
                 if (err) {
-                  res.send({ status: "false" });
+                  io.to(socket.id).emit("subscribe", { status: "false" });
                 } else {
-                  questions.updateOne(
-                    { question: req.body.question },
-                    {
-                      $set: {
-                        status: "solved",
-                      },
-                    },
-                    (err, item) => {
-                      if (err) {
-                        res.send({ status: "false" });
-                      } else {
-                        subscribe.findOne(
-                          { question: req.body.question },
-                          (err, item) => {
-                            item.email.forEach((email) => {
-                              transporter.sendMail(
-                                {
-                                  from: "gcekcse2020@gmail.com",
-                                  to: email,
-                                  subject: "Your Doubt Is Solved",
-                                  text:
-                                    "Question: " +
-                                    req.body.question +
-                                    "\n" +
-                                    "Check Your Answer Here: " +
-                                    `https://${req.get(
-                                      "host"
-                                    )}?q=${encodeURIComponent(
-                                      req.body.question
-                                    )}`,
-                                },
-                                (err, data) => {
-                                  res.send({ status: "true" });
-                                }
-                              );
-                            });
-                          }
-                        );
-                      }
-                    }
-                  );
+                  io.to(socket.id).emit("subscribe", { status: "true" });
                 }
               }
             );
           }
-        }
-      });
-    } else {
-      res.status(404).send({ status: "false" });
-    }
+        });
+      } else {
+        io.to(socket.id).emit("subscribe", { status: "false" });
+      }
+    });
   });
-});
 
-app.post("/subscribe", async (req, res) => {
-  users.findOne({ email: req.body.email }, (err, item) => {
-    if (req.body.pass == item.pass) {
-      subscribe.findOne({ question: req.body.question }, (err, item) => {
-        if (err) {
-          res.send({ status: "false" });
-        } else {
-          subscribe.updateOne(
-            { question: req.body.question },
-            {
-              $set: {
-                email: [...item.email, req.body.email],
-              },
-            },
-            (err, item) => {
+  socket.on("wrong", (req) => {
+    users.findOne({ email: req.email }, (err, item) => {
+      if (req.pass == item.pass) {
+        transporter.sendMail(
+          {
+            from: "gcekcse2020@gmail.com",
+            to: "gcekcse2020@gmail.com",
+            subject: "Answer Is Wrong",
+            text: req.question + "\n" + req.email,
+          },
+          (err, data) => {
+            io.to(socket.id).emit("wrong", { status: "true" });
+          }
+        );
+      } else {
+        io.to(socket.id).emit("wrong", { status: "false" });
+      }
+    });
+  });
+
+  socket.on("delete", async (req, res) => {
+    users.findOne({ email: req.email }, (err, item) => {
+      if (req.pass == item.pass) {
+        questions.deleteOne({ question: req.question }, (err, item) => {
+          if (err) {
+            io.to(socket.id).emit("delete", { status: "false" });
+          } else {
+            subscribe.deleteOne({ question: req.question }, (err, item) => {
               if (err) {
-                res.send({ status: "false" });
+                io.to(socket.id).emit("delete", { status: "false" });
               } else {
-                res.send({ status: "true" });
+                details.deleteOne({ question: req.question }, (err, item) => {
+                  if (err) {
+                    io.to(socket.id).emit("delete", { status: "false" });
+                  } else {
+                    io.to(socket.id).emit("delete", { status: "true" });
+                    io.sockets.emit("updated");
+                  }
+                });
               }
-            }
-          );
-        }
-      });
-    } else {
-      res.status(404).send({ status: "false" });
-    }
+            });
+          }
+        });
+      } else {
+        io.to(socket.id).emit("delete", { status: "false" });
+      }
+    });
   });
-});
 
-app.post("/wrong", async (req, res) => {
-  users.findOne({ email: req.body.email }, (err, item) => {
-    if (req.body.pass == item.pass) {
-      transporter.sendMail(
-        {
-          from: "gcekcse2020@gmail.com",
-          to: "gcekcse2020@gmail.com",
-          subject: "Answer Is Wrong",
-          text: req.body.question + "\n" + req.body.email,
-        },
-        (err, data) => {
-          res.send({ status: "true" });
-        }
-      );
-    } else {
-      res.status(404).send({ status: "false" });
-    }
-  });
-});
-
-app.post("/delete", async (req, res) => {
-  users.findOne({ email: req.body.email }, (err, item) => {
-    if (req.body.pass == item.pass) {
-      questions.deleteOne({ question: req.body.question }, (err, item) => {
-        if (err) {
-          res.send({ status: "false" });
-        } else {
-          subscribe.deleteOne({ question: req.body.question }, (err, item) => {
+  socket.on("delete_answer", (req) => {
+    users.findOne({ email: req.email }, (err, item) => {
+      if (req.pass == item.pass) {
+        details.updateOne(
+          { question: req.question },
+          {
+            $set: {
+              answer: "",
+              atime: "",
+              aemail: "",
+            },
+          },
+          (err, item) => {
             if (err) {
-              res.send({ status: "false" });
+              io.to(socket.id).emit("delete_answer", { status: "false" });
             } else {
-              details.deleteOne(
-                { question: req.body.question },
+              questions.updateOne(
+                { question: req.question },
+                {
+                  $set: {
+                    status: "unsolved",
+                  },
+                },
                 (err, item) => {
                   if (err) {
-                    res.send({ status: "false" });
+                    io.to(socket.id).emit("delete_answer", { status: "false" });
                   } else {
-                    res.send({ status: "true" });
+                    io.to(socket.id).emit("delete_answer", { status: "true" });
+                    io.sockets.emit("updated");
                   }
                 }
               );
             }
-          });
-        }
-      });
-    } else {
-      res.status(404).send({ status: "false" });
-    }
+          }
+        );
+      } else {
+        io.to(socket.id).emit("delete_answer", { status: "false" });
+      }
+    });
   });
-});
 
-app.post("/delete_answer", async (req, res) => {
-  users.findOne({ email: req.body.email }, (err, item) => {
-    if (req.body.pass == item.pass) {
-      details.updateOne(
-        { question: req.body.question },
-        {
-          $set: {
-            answer: "",
-            atime: "",
-            aemail: "",
-          },
-        },
-        (err, item) => {
+  socket.on("add_comment", (req) => {
+    users.findOne({ email: req.email }, (err, item) => {
+      if (req.pass == item.pass) {
+        details.findOne({ question: req.question }, (err, item) => {
           if (err) {
-            res.send({ status: "false" });
+            io.to(socket.id).emit("add_comment", { status: "false" });
           } else {
-            questions.updateOne(
-              { question: req.body.question },
-              {
-                $set: {
-                  status: "unsolved",
+            if (item.comments.includes(req.comment)) {
+              io.to(socket.id).emit("add_comment", { status: "check" });
+            } else {
+              details.updateOne(
+                { question: req.question },
+                {
+                  $set: {
+                    comments: [req.comment, ...item.comments],
+                  },
                 },
-              },
-              (err, item) => {
-                if (err) {
-                  res.send({ status: "false" });
-                } else {
-                  res.send({ status: "true" });
+                (err, item) => {
+                  if (err) {
+                    io.to(socket.id).emit("add_comment", { status: "false" });
+                  } else {
+                    io.to(socket.id).emit("add_comment", { status: "true" });
+                    io.sockets.emit("comments_updated");
+                  }
                 }
-              }
-            );
+              );
+            }
           }
-        }
-      );
-    } else {
-      res.status(404).send({ status: "false" });
-    }
+        });
+      } else {
+        io.to(socket.id).emit("add_comment", { status: "false" });
+      }
+    });
   });
-});
-
-app.post("/add_comment", async (req, res) => {
-  users.findOne({ email: req.body.email }, (err, item) => {
-    if (req.body.pass == item.pass) {
-      details.findOne({ question: req.body.question }, (err, item) => {
-        if (err) {
-          res.send({ status: "false" });
-        } else {
-          if (item.comments.includes(req.body.comment)) {
-            res.send({ status: "check" });
-          } else {
-            details.updateOne(
-              { question: req.body.question },
-              {
-                $set: {
-                  comments: [req.body.comment, ...item.comments],
-                },
-              },
-              (err, item) => {
-                if (err) {
-                  res.send({ status: "false" });
-                } else {
-                  res.send({ status: "true" });
-                }
-              }
-            );
-          }
-        }
-      });
-    } else {
-      res.status(404).send({ status: "false" });
-    }
-  });
-});
-
-app.listen(process.env.PORT || 3000, () => {
-  console.log("running");
 });
