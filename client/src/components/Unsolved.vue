@@ -1,17 +1,12 @@
 <template>
   <aside>
     <img
-      src="../assets/back.svg"
+      src="/assets/back.svg"
       class="back"
       @click="setUnsolved"
       alt="Go Back"
     />
-    <img
-      src="../assets/menu.svg"
-      class="menu"
-      @click="drop = !drop"
-      alt="Menu"
-    />
+    <img src="/assets/menu.svg" class="menu" @click="drop = !drop" alt="Menu" />
     <ul class="drop" v-show="drop">
       <li class="share">Share</li>
       <li @click="deleteQuestion" v-if="details.email == email">

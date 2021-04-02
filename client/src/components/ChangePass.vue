@@ -1,6 +1,6 @@
 <template>
   <aside>
-    <img src="../assets/back.svg" @click="setChange" alt="Go Back" />
+    <img src="/assets/back.svg" @click="setChange" alt="Go Back" />
     <label>Old Password:</label>
     <input
       v-model="pass"

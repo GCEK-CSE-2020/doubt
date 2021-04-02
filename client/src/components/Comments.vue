@@ -12,7 +12,7 @@
     </div>
 
     <div class="one-comment" v-for="(comment, index) in comments" :key="index">
-      <img src="../assets/comment.svg" alt="Comment" />
+      <img src="/assets/comment.svg" alt="Comment" />
       <p>{{ comment }}</p>
     </div>
   </div>

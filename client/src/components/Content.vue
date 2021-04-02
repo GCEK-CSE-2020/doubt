@@ -17,7 +17,7 @@
     </div>
     <img
       class="none"
-      src="../assets/change-filter.svg"
+      src="/assets/change-filter.svg"
       alt="Try Changing Filter"
       v-if="!data.length"
     />

@@ -59,8 +59,8 @@
       </div>
     </div>
     <div class="control" @click="filter = !filter">
-      <img src="../assets/hide.svg" alt="Hide Filter" v-if="filter" />
-      <img src="../assets/show.svg" alt="Show Filter" v-else />
+      <img src="/assets/hide.svg" alt="Hide Filter" v-if="filter" />
+      <img src="/assets/show.svg" alt="Show Filter" v-else />
     </div>
   </div>
 

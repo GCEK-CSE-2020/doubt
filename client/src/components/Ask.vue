@@ -1,6 +1,6 @@
 <template>
   <aside>
-    <img src="../assets/back.svg" @click="setAsk" alt="Go Back" />
+    <img src="/assets/back.svg" @click="setAsk" alt="Go Back" />
     <label>Topic:</label>
     <select v-model="topic" title="Select Your Topic">
       <option value="common">Common</option>
