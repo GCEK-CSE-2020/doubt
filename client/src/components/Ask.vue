@@ -66,8 +66,6 @@ export default {
     setAsk: Function,
     email: String,
     api: String,
-    startProgress: Function,
-    endProgress: Function,
   },
 
   components: {

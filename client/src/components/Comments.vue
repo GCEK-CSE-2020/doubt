@@ -28,8 +28,6 @@ export default {
     comments: Array,
     email: String,
     api: String,
-    startProgress: Function,
-    endProgress: Function,
     fetchComments: Function,
   },
 

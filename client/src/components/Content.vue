@@ -29,8 +29,6 @@
     :email="email"
     :api="api"
     :fetchComments="fetchDetails"
-    :startProgress="startProgress"
-    :endProgress="endProgress"
     v-if="solved"
   />
 
@@ -41,8 +39,6 @@
     :email="email"
     :api="api"
     :fetchComments="fetchDetails"
-    :startProgress="startProgress"
-    :endProgress="endProgress"
     v-if="unsolved"
   />
 </template>
@@ -59,8 +55,6 @@ export default {
     data: Array,
     email: String,
     api: String,
-    startProgress: Function,
-    endProgress: Function,
   },
 
   data() {
@@ -84,7 +78,7 @@ export default {
       } else {
         delete json.question;
         this.current = { ...this.data[this.currentIndex], ...json };
-        if (json.answer) {
+        if (this.data[this.currentIndex].status == "solved") {
           this.solved = true;
         } else {
           this.unsolved = true;
@@ -93,15 +87,11 @@ export default {
     });
 
     this.socket.on("get_one", (json) => {
-      if (json.status == "false") {
-        alert("server Error");
+      this.current = { ...json };
+      if (this.data[this.currentIndex].status == "solved") {
+        this.solved = true;
       } else {
-        this.current = json;
-        if (json.answer) {
-          this.solved = true;
-        } else {
-          this.unsolved = true;
-        }
+        this.unsolved = true;
       }
     });
   },
@@ -167,6 +157,7 @@ export default {
   border: 1px solid #0075d2;
   border-radius: 0.25em;
   word-wrap: break-word;
+  user-select: none;
 }
 
 .head {

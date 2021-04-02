@@ -21,17 +21,14 @@
 </template>
 
 <script>
-import fetchData from "../scripts/fetchData";
-
 export default {
   name: "Login",
 
   props: {
+    socket: Object,
     setEmail: Function,
     setApi: Function,
     login: Function,
-    startProgress: Function,
-    endProgress: Function,
   },
 
   data() {
@@ -41,30 +38,9 @@ export default {
     };
   },
 
-  methods: {
-    getIn() {
-      const email = this.email.toLowerCase().trim();
-
-      if (email && this.pass) {
-        this.startProgress();
-
-        fetchData(
-          "check",
-          {
-            email: email,
-            pass: this.pass,
-          },
-          this.func
-        );
-      } else {
-        alert("Fill All Fields");
-      }
-    },
-
-    func(json) {
+  created() {
+    this.socket.on("check", (json) => {
       const email = this.email.trim().toLowerCase();
-
-      this.endProgress();
 
       if (json.status == "true") {
         this.setEmail(email);
@@ -80,6 +56,21 @@ export default {
         this.login();
       } else {
         alert("Email Or Pass Is Wrong");
+      }
+    });
+  },
+
+  methods: {
+    getIn() {
+      const email = this.email.toLowerCase().trim();
+
+      if (email && this.pass) {
+        this.socket.emit("check", {
+          email: email,
+          pass: this.pass,
+        });
+      } else {
+        alert("Fill All Fields");
       }
     },
   },
