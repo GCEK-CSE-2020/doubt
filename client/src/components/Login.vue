@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <div>
+    <form>
       <label>Email:</label>
       <input
         v-model="email"
@@ -15,8 +15,8 @@
         placeholder="Type Your Password Here"
         title="Type Your Password Here"
       />
-      <input type="button" value="Get In" @click="getIn" />
-    </div>
+      <input type="submit" value="Get In" @click="getIn" />
+    </form>
   </div>
 </template>
 
@@ -61,7 +61,9 @@ export default {
   },
 
   methods: {
-    getIn() {
+    getIn(e) {
+      e.preventDefault();
+
       const email = this.email.toLowerCase().trim();
 
       if (email && this.pass) {
@@ -95,7 +97,7 @@ input {
   box-shadow: 0.125em 0.125em 0.25em 0 rgba(0, 0, 0, 0.25);
 }
 
-input[type="button"] {
+input[type="submit"] {
   background: #0075d2;
 }
 
@@ -110,7 +112,7 @@ input[type="button"] {
   margin-top: -8em;
 }
 
-.login div {
+.form {
   display: grid;
   text-align: center;
 }

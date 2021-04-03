@@ -1,15 +1,15 @@
 <template>
   <div class="comments">
     <label>Comments</label>
-    <div class="comment-div">
+    <form class="comment-div">
       <input
         type="text"
         v-model="comment"
         placeholder="Type Your Comment Here"
         title="Type Your Comment Here"
       />
-      <input type="button" @click="addComment" value="Add" />
-    </div>
+      <input type="submit" @click="addComment" value="Add" />
+    </form>
 
     <div class="one-comment" v-for="(comment, index) in comments" :key="index">
       <img src="/assets/comment.svg" alt="Comment" />
@@ -52,7 +52,9 @@ export default {
   },
 
   methods: {
-    addComment() {
+    addComment(e) {
+      e.preventDefault();
+
       if (this.comment) {
         this.socket.emit("add_comment", {
           question: this.question,
@@ -106,7 +108,7 @@ input {
   box-shadow: 0.125em 0.125em 0.25em 0 rgba(0, 0, 0, 0.25);
 }
 
-input[type="button"] {
+input[type="submit"] {
   width: 5em;
   height: 2em;
   margin: 0 0 0 1em;

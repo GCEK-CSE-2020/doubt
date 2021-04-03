@@ -32,7 +32,7 @@
         <option value="email">Your Questions</option>
       </select>
       <label>Search:</label>
-      <div>
+      <form>
         <input
           type="search"
           v-model="search"
@@ -41,11 +41,16 @@
         />
         <input
           class="search"
-          type="button"
-          @click="fetchQuestions"
+          type="submit"
+          @click="
+            (e) => {
+              e.preventDefault();
+              fetchQuestions();
+            }
+          "
           value="search"
         />
-      </div>
+      </form>
       <input
         type="button"
         class="ask"
