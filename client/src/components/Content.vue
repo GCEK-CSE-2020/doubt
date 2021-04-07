@@ -88,7 +88,7 @@ export default {
 
     this.socket.on("get_one", (json) => {
       this.current = { ...json };
-      if (this.data[this.currentIndex].status == "solved") {
+      if (json.status == "solved") {
         this.solved = true;
       } else {
         this.unsolved = true;
