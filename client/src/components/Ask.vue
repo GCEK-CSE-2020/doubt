@@ -174,20 +174,24 @@ img {
 }
 
 .detail img {
+  width: calc(100vw - 4em) !important;
   max-width: calc(450px - 4em) !important;
   height: auto !important;
 }
 
 .detail iframe {
+  width: calc(100vw - 4em) !important;
   max-width: calc(450px - 4em) !important;
 }
 
 .block img {
+  width: calc(100vw - 4em) !important;
   max-width: calc(450px - 4em) !important;
   height: auto !important;
 }
 
 .block iframe {
+  width: calc(100vw - 4em) !important;
   max-width: calc(450px - 4em) !important;
 }
 </style>
