@@ -1,22 +1,17 @@
 <template>
-  <TopProgressBar ref="topProgress" color="#0075d2" />
-
   <Questions
     :socket="socket"
     :email="email"
     :api="api"
     :logout="logout"
-    :startProgress="startProgress"
-    :endProgress="endProgress"
     v-if="log"
   />
 
   <Login
+    :socket="socket"
     :setEmail="setEmail"
     :setApi="setApi"
     :login="login"
-    :startProgress="startProgress"
-    :endProgress="endProgress"
     v-else
   />
 </template>
@@ -25,7 +20,6 @@
 import { io } from "socket.io-client";
 import Questions from "./components/Questions.vue";
 import Login from "./components/Login.vue";
-import TopProgressBar from "./components/TopProgressBar";
 
 export default {
   name: "App",
@@ -33,7 +27,6 @@ export default {
   components: {
     Login,
     Questions,
-    TopProgressBar,
   },
 
   data() {
@@ -83,14 +76,6 @@ export default {
         this.log = false;
       }
     },
-
-    startProgress() {
-      this.$refs.topProgress.start();
-    },
-
-    endProgress() {
-      this.$refs.topProgress.done();
-    },
   },
 };
 </script>
@@ -105,6 +90,15 @@ body {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+}
+
+img,
+iframe,
+label:not(.head),
+input,
+select,
+option,
+span {
   user-select: none;
 }
 
@@ -119,10 +113,6 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-}
-
-.block {
-  user-select: auto;
 }
 
 input[type="button"],

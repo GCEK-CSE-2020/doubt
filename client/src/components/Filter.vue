@@ -70,15 +70,12 @@
     :email="email"
     :api="api"
     v-if="asking"
-    :startProgress="startProgress"
-    :endProgress="endProgress"
   />
 
   <ChangePass
+    :socket="socket"
     :setChange="setChange"
     :email="email"
-    :startProgress="startProgress"
-    :endProgress="endProgress"
     v-if="changing"
   />
 </template>
@@ -101,8 +98,6 @@ export default {
     logout: Function,
     email: String,
     api: String,
-    startProgress: Function,
-    endProgress: Function,
   },
 
   data() {
@@ -133,7 +128,7 @@ export default {
 
   created() {
     this.socket.on("get", (json) => {
-      if (json.status) {
+      if (json.status == "false") {
         alert("Something Went Wrong");
       } else {
         this.setData(json);

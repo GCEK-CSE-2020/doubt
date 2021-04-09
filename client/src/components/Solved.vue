@@ -43,8 +43,6 @@
       :comments="details.comments"
       :email="email"
       :api="api"
-      :fetchComments="fetchComments"
-      :startProgress="startProgress"
       :endProgress="endProgress"
     />
   </aside>
@@ -63,8 +61,6 @@ export default {
     email: String,
     api: String,
     fetchComments: Function,
-    startProgress: Function,
-    endProgress: Function,
   },
 
   components: {
@@ -241,6 +237,7 @@ input {
 }
 
 .block {
+  cursor: text;
   margin: 1em auto;
   padding: 0.5em 1em;
   background: #222;

@@ -5,18 +5,9 @@
     :logout="logout"
     :email="email"
     :api="api"
-    :startProgress="startProgress"
-    :endProgress="endProgress"
   />
 
-  <Content
-    :socket="socket"
-    :data="data"
-    :email="email"
-    :api="api"
-    :startProgress="startProgress"
-    :endProgress="endProgress"
-  />
+  <Content :socket="socket" :data="data" :email="email" :api="api" />
 </template>
 
 <script>
@@ -31,8 +22,6 @@ export default {
     logout: Function,
     email: String,
     api: String,
-    startProgress: Function,
-    endProgress: Function,
   },
 
   components: {

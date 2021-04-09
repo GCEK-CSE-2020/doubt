@@ -20,16 +20,13 @@
 </template>
 
 <script>
-import fetchData from "../scripts/fetchData";
-
 export default {
   name: "changePass",
 
   props: {
+    socket: Object,
     setChange: Function,
     email: String,
-    startProgress: Function,
-    endProgress: Function,
   },
 
   data() {
@@ -39,32 +36,30 @@ export default {
     };
   },
 
+  created() {
+    this.socket.on("change", (json) => {
+      if (json.status == "true") {
+        const log = JSON.parse(localStorage.getItem("log"));
+        log.api = json.newPass;
+        localStorage.setItem("log", JSON.stringify(log));
+        alert("Password Changed");
+        this.setChange();
+      } else {
+        alert("Server Error");
+      }
+    });
+  },
+
   methods: {
     change() {
       const conf = confirm("Are You Sure?");
 
       if (conf) {
-        this.startProgress();
-        fetchData(
-          "change",
-          {
-            email: this.email,
-            pass: this.pass,
-            newPass: this.newPass,
-          },
-          (json) => {
-            this.endProgress();
-            if (json.status == "true") {
-              const log = JSON.parse(localStorage.getItem("log"));
-              log.api = json.newPass;
-              localStorage.setItem("log", JSON.stringify(log));
-              alert("Password Changed");
-              this.setChange();
-            } else {
-              alert("Server Error");
-            }
-          }
-        );
+        this.socket.emit("change", {
+          email: this.email,
+          pass: this.pass,
+          newPass: this.newPass,
+        });
       }
     },
   },
