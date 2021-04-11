@@ -74,7 +74,7 @@
     :setAsk="setAsk"
     :email="email"
     :api="api"
-    v-if="asking"
+    v-show="asking"
   />
 
   <ChangePass
