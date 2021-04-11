@@ -47,6 +47,7 @@ const auth = async (email, pass, id, path) => {
 
 io.on("connection", (socket) => {
   console.log("socket connected");
+  io.to(socket.id).emit("update", { status: "true" });
 
   socket.on("check", async (req) => {
     try {

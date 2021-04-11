@@ -145,10 +145,6 @@ export default {
     });
   },
 
-  mounted() {
-    this.fetchQuestions();
-  },
-
   methods: {
     fetchQuestions() {
       this.socket.emit("get", {
