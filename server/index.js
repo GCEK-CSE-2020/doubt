@@ -122,18 +122,20 @@ io.on("connection", (socket) => {
           data["$text"]["$search"] = req.quest;
         }
 
-        const items = await Questions.find(data)
-          .sort({ time: req.status == "unsolved" ? 1 : -1 })
-          .map((question) => {
-            question = question.toObject();
-            delete question.__v;
-            delete question._id;
-            delete question.status;
-            delete question.email;
-            delete question.topic;
-            delete question.module;
-            return question;
-          });
+        let items = await Questions.find(data).sort({
+          time: req.status == "unsolved" ? 1 : -1,
+        });
+
+        items = await items.map((question) => {
+          question = question.toObject();
+          delete question.__v;
+          delete question._id;
+          delete question.status;
+          delete question.email;
+          delete question.topic;
+          delete question.module;
+          return question;
+        });
 
         io.to(socket.id).emit("get", items);
       }
