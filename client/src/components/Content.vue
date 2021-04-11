@@ -59,6 +59,7 @@ export default {
 
   data() {
     return {
+      load: false,
       current: {},
       currentIndex: null,
       solved: false,
@@ -88,16 +89,21 @@ export default {
 
     this.socket.on("get_one", (json) => {
       this.current = { ...json };
-      if (json.status == "solved") {
-        if (this.unsolved) {
-          this.unsolved = false;
+      if (this.unsolved || this.solved || this.load) {
+        if (this.load) {
+          this.load = false;
         }
-        this.solved = true;
-      } else {
-        if (this.solved) {
-          this.solved = false;
+        if (json.status == "solved") {
+          if (this.unsolved) {
+            this.unsolved = false;
+          }
+          this.solved = true;
+        } else {
+          if (this.solved) {
+            this.solved = false;
+          }
+          this.unsolved = true;
         }
-        this.unsolved = true;
       }
     });
   },
@@ -106,6 +112,7 @@ export default {
     const url = window.location.href.split("?");
 
     if (url.length == 2 && url[1].split("=").length == 2) {
+      this.load = true;
       this.fetchDetails(encodeURIComponent(url[1].split("=")[1]));
     }
   },
