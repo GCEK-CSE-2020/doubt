@@ -97,8 +97,10 @@ io.on("connection", (socket) => {
   socket.on("get", async (req) => {
     try {
       const logged = await auth(req.email, req.pass, socket.id, "get");
+
       if (logged) {
         const data = {};
+
         if (req.status) {
           if (req.status == "email") {
             data.email = req.email;
@@ -106,25 +108,34 @@ io.on("connection", (socket) => {
             data.status = req.status;
           }
         }
+
         if (req.topic) {
           data.topic = req.topic;
         }
+
         if (req.module && req.topic && req.topic != "common") {
           data.module = req.module;
         }
+
         if (req.quest) {
           data["$text"] = {};
           data["$text"]["$search"] = req.quest;
-          const items = await Questions.find(data).sort({
-            time: req.status == "unsolved" ? 1 : -1,
-          });
-          io.to(socket.id).emit("get", items);
-        } else {
-          const items = await Questions.find(data).sort({
-            time: req.status == "unsolved" ? 1 : -1,
-          });
-          io.to(socket.id).emit("get", items);
         }
+
+        const items = await Questions.find(data)
+          .sort({ time: req.status == "unsolved" ? 1 : -1 })
+          .map((question) => {
+            question = question.toObject();
+            delete question.__v;
+            delete question._id;
+            delete question.status;
+            delete question.email;
+            delete question.topic;
+            delete question.module;
+            return question;
+          });
+
+        io.to(socket.id).emit("get", items);
       }
     } catch {
       io.to(socket.id).emit("get", { status: false });
@@ -142,24 +153,12 @@ io.on("connection", (socket) => {
         delete item1.question;
         delete item1.__v;
         delete item1._id;
-        delete item1.__v;
+        delete item2.__v;
         delete item2._id;
         io.to(socket.id).emit("get_one", Object.assign(item1, item2));
       }
     } catch {
       io.to(socket.id).emit("get_one", { status: "false" });
-    }
-  });
-
-  socket.on("get_details", async (req) => {
-    try {
-      const logged = await auth(req.email, req.pass, socket.id, "get_details");
-      if (logged) {
-        const result = await Details.findOne({ question: req.question });
-        io.to(socket.id).emit("get_details", result.toObject());
-      }
-    } catch {
-      io.to(socket.id).emit("get_details", { status: "false" });
     }
   });
 

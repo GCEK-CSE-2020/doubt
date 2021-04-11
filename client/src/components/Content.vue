@@ -6,7 +6,7 @@
       :key="index"
       @click="
         () => {
-          pop(index);
+          pop(details.question);
         }
       "
     >
@@ -73,20 +73,6 @@ export default {
   },
 
   created() {
-    this.socket.on("get_details", (json) => {
-      if (json.status == "false") {
-        alert("server Error");
-      } else {
-        delete json.question;
-        this.current = { ...this.data[this.currentIndex], ...json };
-        if (this.data[this.currentIndex].status == "solved") {
-          this.solved = true;
-        } else {
-          this.unsolved = true;
-        }
-      }
-    });
-
     this.socket.on("get_one", (json) => {
       this.current = { ...json };
       if (this.unsolved || this.solved || this.load) {
@@ -118,13 +104,9 @@ export default {
   },
 
   methods: {
-    pop(index) {
-      this.currentIndex = index;
-      this.socket.emit("get_details", {
-        question: this.data[index].question,
-        email: this.email,
-        pass: this.api,
-      });
+    pop(question) {
+      this.load = true;
+      this.fetchDetails(question);
     },
 
     fetchDetails(question) {
