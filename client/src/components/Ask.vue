@@ -21,6 +21,7 @@
       <option value="3">Module 3</option>
       <option value="4">Module 4</option>
       <option value="5">Module 5</option>
+      <option value="6" v-show="topic == 'bee'">Module 6</option>
     </select>
     <label>Question:</label>
     <input
