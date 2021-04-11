@@ -47,6 +47,11 @@ const auth = async (email, pass, id, path) => {
 
 io.on("connection", (socket) => {
   console.log("socket connected");
+  io.to(socket.id).emit("updated");
+
+  socket.on("updated", async () => {
+    io.to(socket.id).emit("updated");
+  });
 
   socket.on("check", async (req) => {
     try {
@@ -66,7 +71,7 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("change", async (req, res) => {
+  socket.on("change", async (req) => {
     try {
       const result = await Users.findOne({ email: req.body.email });
       if (result) {
@@ -286,7 +291,7 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("delete", async (req, res) => {
+  socket.on("delete", async (req) => {
     try {
       const logged = await auth(req.email, req.pass, socket.id, "delete");
       if (logged) {

@@ -66,6 +66,7 @@ export default {
 
     login() {
       this.log = true;
+      this.socket.emit("updated");
     },
 
     logout() {
